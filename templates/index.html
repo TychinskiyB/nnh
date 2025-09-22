@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+{% block title %}НОВОНЕФТЕХИМ — Главная{% endblock %}
+
+{% block head_extra %}
+<style>
+:root{
+ --ink:#151a22; --ink-muted:#5b6472; --paper:#f7f9fc; --card:#ffffff; --line:#e7ecf3;
+ --brand:#0a49a7; --brand-ink:#fff; --accent:#ff8640;
+}
+@media (prefers-color-scheme: dark){
+ :root{
+   --ink:#eef2f7; --ink-muted:#aeb7c4; --paper:#0c1218; --card:#121923; --line:#1c2733;
+   --brand:#6aa6ff; --brand-ink:#0c1218; --accent:#ffb07a;
+ }
+}
+body{background:var(--paper); color:var(--ink)}
+
+/* ===== HERO ===== */
+.hero-video{position:relative; min-height:86vh; display:grid; place-items:center; isolation:isolate}
+.hero-media{position:absolute; inset:0; overflow:hidden; border-bottom:1px solid var(--line)}
+.hero-media video{width:100%; height:100%; object-fit:cover; filter:brightness(.9) saturate(1.05)}
+.hero-overlay{position:absolute; inset:0; background:
+ linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.25) 25%, rgba(0,0,0,.15) 55%, rgba(0,0,0,.0) 100%)}
+.hero-video.no-video{background:linear-gradient(180deg,#eaf1fb,#f7f9fc)}
+.hero-content{position:relative; z-index:2; text-align:center; padding: clamp(28px,5vw,64px) 20px; max-width: 1000px}
+.hero h1{font-size: clamp(36px,5.4vw,64px); line-height:1.08; letter-spacing:-.02em; margin:0; color:#fff}
+.hero .lead{margin:14px auto 18px; max-width: 720px; color:#f3f6fb; font-size: clamp(16px,1.4vw,19px); opacity:.95}
+.btn-row{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+
+/* Кнопки */
+.btn{border:1px solid var(--line)}
+.btn-primary{background:var(--brand); color:var(--brand-ink)!important; border-color:transparent; box-shadow:0 6px 18px rgba(10,73,167,.25)}
+.btn-primary:hover{filter:brightness(1.05)}
+.btn-ghost{background:rgba(255,255,255,.1); color:#fff!important; border-color:rgba(255,255,255,.3)}
+.hero .btn-ghost:hover{background:rgba(255,255,255,.2)}
+
+/* ===== Секции/текст ===== */
+.section{padding: clamp(40px, 7vw, 84px) 0}
+.section-head.center{text-align:center}
+.section-head .muted{color:var(--ink-muted)}
+
+/* ===== Фичи ===== */
+.feature{background:var(--card); border:1px solid var(--line); border-radius:18px; overflow:hidden; transition:transform .2s, box-shadow .2s}
+.feature:hover{transform:translateY(-3px); box-shadow:0 16px 38px rgba(14,29,54,.08)}
+.feature-ic{font-size:26px; margin:16px 16px 0}
+.feature .card-body{padding:16px 16px 18px}
+.feature h3{margin:6px 0 4px}
+.feature p{color:var(--ink-muted); margin:0}
+
+/* ===== KPI / Статистика — центр и меньше отступы ===== */
+.kpi-section{ padding:32px 0; } /* было clamp(40px,7vw,84px) — уменьшили только для KPI */
+.kpi{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+  justify-items:center; /* карточки выравниваются по центру своих колонок */
+}
+@media(min-width:900px){
+  .kpi{ grid-template-columns:repeat(3,1fr); } /* вместо 4 — ровно три колонки */
+}
+.kpi .card{
+  background:var(--card); border:1px solid var(--line); border-radius:18px;
+  text-align:center; padding:18px 10px 16px; box-shadow:0 4px 14px rgba(14,29,54,.06);
+  max-width: 360px; width:100%; /* не растягиваем слишком широко, визуальный размер остаётся стабильным */
+}
+.kpi .num{font-size: clamp(34px,4.6vw,46px); font-weight:800; letter-spacing:-.02em; color:var(--ink); margin:0 0 4px}
+.kpi .txt{color:var(--ink-muted); margin:0}
+
+/* ===== Продукты (скролл-снэп) ===== */
+.live-wrap{overflow:auto; scroll-snap-type:x mandatory; padding-bottom:6px}
+.live-grid{display:grid; grid-auto-flow:column; grid-auto-columns:minmax(280px, 1fr); gap:14px}
+@media(min-width:980px){.live-grid{grid-auto-columns: 32%;}}
+.live-card{scroll-snap-align:center; background:var(--card); border:1px solid var(--line); border-radius:18px; overflow:hidden; transition:transform .2s, box-shadow .2s}
+.live-card:hover{transform:translateY(-3px); box-shadow:0 16px 38px rgba(14,29,54,.08)}
+.live-media{aspect-ratio:16/10; overflow:hidden}
+.live-media img{width:100%; height:100%; object-fit:cover; transform:scale(1.02); transition:transform .35s}
+.live-card:hover .live-media img{transform:scale(1.06)}
+.live-body{padding:14px 16px 18px}
+.live-body p{color:var(--ink-muted); margin:4px 0 0}
+
+/* ===== Лента клиентов ===== */
+.ribbon{border-top:1px dashed var(--line); border-bottom:1px dashed var(--line); background:linear-gradient(180deg, rgba(0,0,0,.02), transparent)}
+.marquee{overflow:hidden; mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)}
+.marquee-track{display:flex; width:max-content; gap:36px; padding:10px 0; will-change:transform; animation:mar 28s linear infinite}
+.marquee-track--alt{animation-delay:-14s}
+@keyframes mar{to{transform:translateX(-50%)}}
+.logo-pill{border:1px solid var(--line); border-radius:999px; padding:10px 16px; font-weight:700; background:var(--card); white-space:nowrap}
+
+/* ===== Отзывы ===== */
+.carousel{position:relative}
+.car-viewport{overflow:hidden}
+.car-track{display:flex; transition:transform .5s cubic-bezier(.2,.6,.2,1)}
+.car-item{min-width:100%; padding:6px}
+.car-item .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:16px}
+.card .avatar{width:56px;height:56px;border-radius:50%;object-fit:cover}
+.card .quote{font-size:18px; line-height:1.6}
+.car-btn{position:absolute; top:50%; transform:translateY(-50%); width:44px;height:44px;border-radius:999px;border:1px solid var(--line); background:#fff; color:var(--ink); display:grid;place-items:center; cursor:pointer}
+@media (prefers-color-scheme: dark){.car-btn{background:#1b2430; color:#fff}}
+.prev{left:6px} .next{right:6px}
+
+/* ===== CTA ===== */
+.cta{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:26px 22px; text-align:center; box-shadow:0 6px 22px rgba(14,29,54,.06)}
+.cta p{color:var(--ink-muted); margin:6px 0 12px}
+
+/* Плавное появление */
+.reveal{opacity:0; transform:translateY(10px); transition:opacity .6s ease, transform .6s ease}
+.reveal.reveal-in{opacity:1; transform:none}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero hero-video">
+  <div class="hero-media" id="heroMedia">
+    <video id="heroVideo" autoplay muted loop playsinline preload="auto">
+      <source src="{{ url_for('static', filename='videos/video_glavnoe.mp4') }}" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="hero-content">
+    <h1>Инженерные решения для&nbsp;непрерывного производства</h1>
+    <p class="lead">Поставляем и внедряем оборудование, которое работает стабильно и&nbsp;предсказуемо.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="{{ url_for('contact') }}">Связаться</a>
+      <a class="btn btn-ghost" href="{{ url_for('products') }}">Каталог продуктов</a>
+    </div>
+  </div>
+  <noscript><style>.hero-media video{display:none}.hero-video{background:#eaf1fb}</style></noscript>
+</section>
+
+<!-- Преимущества -->
+<section class="section">
+  <div class="container">
+    <div class="grid reveal">
+      <article class="card col-4 feature">
+        <div class="feature-ic">⚙️</div>
+        <div class="card-body">
+          <h3>Инжиниринг</h3>
+          <p>Подбор и расчёт под конкретные условия.</p>
+        </div>
+      </article>
+      <article class="card col-4 feature">
+        <div class="feature-ic">🎯</div>
+        <div class="card-body">
+          <h3>Производство</h3>
+          <p>Изготовление узлов и блоков «под ключ».</p>
+        </div>
+      </article>
+      <article class="card col-4 feature">
+        <div class="feature-ic">🚁</div>
+        <div class="card-body">
+          <h3>Импорт оборудования</h3>
+          <p>Контракты, логистика, сертификация, доставка.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- KPI (видимые карточки) -->
+<section class="section alt kpi-section">
+  <div class="container">
+    <div class="kpi reveal">
+      <div class="card">
+        <p class="num counter" data-target="12" data-suffix="+">12+</p>
+        <p class="txt">лет на рынке</p>
+      </div>
+      <div class="card">
+        <p class="num counter" data-target="500" data-suffix="+">500+</p>
+        <p class="txt">успешных проектов</p>
+      </div>
+      <div class="card">
+        <p class="num counter" data-target="24" data-suffix="/7">24/7</p>
+        <p class="txt">техническая поддержка</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Лента клиентов (без наложений) -->
+<section class="section alt">
+  <div class="container">
+    <div class="ribbon reveal" aria-label="Клиенты">
+      <div class="marquee">
+        <div class="marquee-track">
+          <span class="logo-pill">Роснефть</span>
+          <span class="logo-pill">Газпромнефть</span>
+          <span class="logo-pill">Сибур</span>
+          <span class="logo-pill">Евраз</span>
+          <span class="logo-pill">ОНПЗ</span>
+          <span class="logo-pill">НЛМК</span>
+          <span class="logo-pill">ТАНЕКО</span>
+          <span class="logo-pill">ЛУКОЙЛ</span>
+          <span class="logo-pill">Роснефть</span>
+          <span class="logo-pill">Газпромнефть</span>
+          <span class="logo-pill">Сибур</span>
+          <span class="logo-pill">Евраз</span>
+          <span class="logo-pill">ОНПЗ</span>
+          <span class="logo-pill">НЛМК</span>
+          <span class="logo-pill">ТАНЕКО</span>
+          <span class="logo-pill">ЛУКОЙЛ</span>
+        </div>
+        <div class="marquee-track marquee-track--alt" aria-hidden="true">
+          <span class="logo-pill">Роснефть</span>
+          <span class="logo-pill">Газпромнефть</span>
+          <span class="logo-pill">Сибур</span>
+          <span class="logo-pill">Евраз</span>
+          <span class="logo-pill">ОНПЗ</span>
+          <span class="logo-pill">НЛМК</span>
+          <span class="logo-pill">ТАНЕКО</span>
+          <span class="logo-pill">ЛУКОЙЛ</span>
+          <span class="logo-pill">Роснефть</span>
+          <span class="logo-pill">Газпромнефть</span>
+          <span class="logo-pill">Сибур</span>
+          <span class="logo-pill">Евраз</span>
+          <span class="logo-pill">ОНПЗ</span>
+          <span class="logo-pill">НЛМК</span>
+          <span class="logo-pill">ТАНЕКО</span>
+          <span class="logo-pill">ЛУКОЙЛ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Отзывы -->
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal">
+      <h2>Отзывы</h2>
+      <p class="muted">Что говорят о нашей работе</p>
+    </div>
+
+    <div class="carousel reveal" id="carousel">
+      <button class="car-btn prev" aria-label="Назад">‹</button>
+      <div class="car-viewport">
+        <div class="car-track">
+          <article class="car-item">
+            <div class="card">
+              <p class="quote">«Запустились в срок, телеметрия и мониторинг — без нареканий. Команда держала нас в курсе на каждом этапе».</p>
+              <div class="who" style="display:flex; gap:12px; align-items:center; margin-top:12px">
+                <img class="avatar" src="https://dummyimage.com/56x56/d9d9d9/1d1d1f&text=AK" alt="">
+                <div><strong>Алексей К.</strong><br><span class="muted">Технический директор</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="car-item">
+            <div class="card">
+              <p class="quote">«Сервис понятный: регламенты, запасники, реакция в течение дня. Отличный опыт внедрения».</p>
+              <div class="who" style="display:flex; gap:12px; align-items:center; margin-top:12px">
+                <img class="avatar" src="https://dummyimage.com/56x56/d9d9d9/1d1d1f&text=EM" alt="">
+                <div><strong>Екатерина М.</strong><br><span class="muted">Руководитель проектов</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="car-item">
+            <div class="card">
+              <p class="quote">«Водоподготовка стала стабильнее, мы снизили OPEX и сократили внеплановые остановки».</p>
+              <div class="who" style="display:flex; gap:12px; align-items:center; margin-top:12px">
+                <img class="avatar" src="https://dummyimage.com/56x56/d9d9d9/1d1d1f&text=NV" alt="">
+                <div><strong>Николай В.</strong><br><span class="muted">Главный инженер</span></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+      <button class="car-btn next" aria-label="Вперёд">›</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <div class="container">
+    <div class="cta reveal">
+      <h2 class="mt-0">Есть ТЗ или спецификация?</h2>
+      <p>Пришлите — подготовим варианты: изготовление или импорт, сроки и стоимость.</p>
+      <a class="btn btn-primary" href="{{ url_for('contact') }}">Отправить запрос</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block body_end %}
+<script>
+// Воспроизведение видео + фолбэк
+(function(){
+ const v = document.getElementById('heroVideo');
+ const section = document.querySelector('.hero-video');
+ if(!v) return;
+ const p = v.play && v.play();
+ if(p && typeof p.then === 'function'){ p.catch(()=> section.classList.add('no-video')); }
+ v.addEventListener('error', ()=> section.classList.add('no-video'));
+})();
+
+// Reveal
+(()=>{const els=[...document.querySelectorAll('.reveal')]; if(!els.length) return;
+const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('reveal-in'); io.unobserve(en.target);}})},{threshold:.18});
+els.forEach(el=>io.observe(el));
+})();
+
+// Счётчики
+(function(){
+ const counters = document.querySelectorAll('.counter'); if(!counters.length) return;
+ const io = new IntersectionObserver((entries)=>{
+   entries.forEach(entry=>{
+     if(entry.isIntersecting){
+       const el = entry.target, target = Number(el.dataset.target||0), suffix = el.dataset.suffix||'';
+       const start = performance.now(), dur = 900;
+       function step(t){
+         const p = Math.min(1,(t-start)/dur);
+         const val = Math.round(target*(0.2+0.8*Math.pow(p,0.8)));
+         el.textContent = val + suffix;
+         if(p<1) requestAnimationFrame(step);
+       }
+       requestAnimationFrame(step);
+       io.unobserve(el);
+     }
+   });
+ },{threshold:.6});
+ counters.forEach(c=>io.observe(c));
+})();
+
+// Карусель отзывов
+(function(){
+ const carousel = document.getElementById('carousel'); if(!carousel) return;
+ const track = carousel.querySelector('.car-track');
+ const items = carousel.querySelectorAll('.car-item');
+ const prev = carousel.querySelector('.prev');
+ const next = carousel.querySelector('.next');
+ let idx = 0;
+ function update(){ const w = carousel.querySelector('.car-viewport').clientWidth; track.style.transform = `translateX(${-idx*w}px)`; }
+ function go(n){ idx = (n + items.length) % items.length; update(); }
+ let timer = setInterval(()=>go(idx+1), 5000);
+ function reset(){ clearInterval(timer); timer = setInterval(()=>go(idx+1), 5000); }
+ next.addEventListener('click', ()=>{go(idx+1); reset();});
+ prev.addEventListener('click', ()=>{go(idx-1); reset();});
+ window.addEventListener('resize', update);
+ update();
+})();
+</script>
+{% endblock %}
+
+
+

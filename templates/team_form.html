@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+{% block admin %}
+<h2 class="mt-0">{{ 'Редактировать сотрудника' if emp else 'Новый сотрудник' }}</h2>
+<form method="POST" enctype="multipart/form-data" class="form">
+  <input class="input" name="full_name" placeholder="ФИО" value="{{ emp.full_name if emp else '' }}" required>
+  <input class="input" name="title" placeholder="Должность" value="{{ emp.title if emp else '' }}" required>
+  <input class="input" name="dept" placeholder="Отдел (например: ОТДЕЛ СОПРОВОЖДЕНИЯ)" value="{{ emp.dept if emp else '' }}" required>
+  <input class="input" name="email" type="email" placeholder="Email" value="{{ emp.email if emp else '' }}">
+  <input class="input" name="phone" placeholder="Телефон" value="{{ emp.phone if emp else '' }}">
+
+  <label class="checkbox mt-1">
+    <input type="checkbox" name="span2" {% if emp and emp.span2 %}checked{% endif %}> Крупная карточка в мозаике (span-2)
+  </label>
+
+  <label class="mt-1">Фото (URL или загрузка файла)</label>
+  <input class="input" name="photo" placeholder="static/images/foto1.jpg" value="{{ emp.photo if emp else '' }}">
+  <input type="file" name="photo_file" accept="image/*">
+
+  <button class="btn mt-1" type="submit">Сохранить</button>
+</form>
+{% endblock %}
+
+
+

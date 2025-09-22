@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Новости — НОВОНЕФТЕХИМ{% endblock %}
+
+{% macro norm_cover(path, fallback) -%}
+  {%- if not path %}{{ url_for('static', filename=fallback) }}
+  {%- elif path.startswith('http://') or path.startswith('https://') %}{{ path }}
+  {%- elif path.startswith('static/') %}{{ url_for('static', filename=path[7:]) }}
+  {%- elif path.startswith('/static/') %}{{ path }}
+  {%- else %}{{ path }}{# на случай, если уже абсолютный путь #}
+  {%- endif -%}
+{%- endmacro %}
+
+{% block head_extra %}
+<style>
+  :root{--muted:#6e6e73;--card:#f5f5f7;--divider:rgba(0,0,0,.08);--brand:#0071e3}
+  @media (prefers-color-scheme:dark){:root{--muted:#a1a1a6;--card:#111;--divider:rgba(255,255,255,.12)}}
+  .news-wrap{max-width:1080px;margin:0 auto;padding:32px 20px}
+  .eyebrow{color:var(--brand);text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:600}
+  .meta{display:flex;gap:12px;align-items:center;color:var(--muted);font-size:14px}
+  .news-hero{position:relative;border-radius:24px;overflow:hidden;background:var(--card);box-shadow:0 12px 32px rgba(0,0,0,.08);margin-bottom:32px}
+  .hero-media{aspect-ratio:16/9;background:center/cover}
+  .hero-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.0) 20%, rgba(0,0,0,.55) 100%)}
+  .hero-body{position:absolute;left:24px;right:24px;bottom:20px;color:#fff}
+  .hero-title{font-size:clamp(28px,4.5vw,48px);line-height:1.08;letter-spacing:-.02em;margin:6px 0}
+  .grid-news{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:860px){.grid-news{grid-template-columns:repeat(3,1fr)}}
+  .n-card{display:block;text-decoration:none;color:inherit;border-radius:18px;overflow:hidden;background:var(--card);border:1px solid var(--divider);transition:transform .2s, box-shadow .2s}
+  .n-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.1)}
+  .n-media{aspect-ratio:3/2;background:center/cover}
+  .n-body{padding:14px 14px 16px}
+  .n-title{font-weight:700;line-height:1.25;margin:2px 0 6px}
+  .n-date{color:var(--muted);font-size:12px;margin-bottom:6px}
+  .excerpt{color:var(--muted);max-width:72ch}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="news-wrap">
+
+    {# HERO #}
+    {% set top = highlighted if highlighted else (posts|first) %}
+    {% if top %}
+      <article class="news-hero">
+        <a href="{{ url_for('news_detail', pid=top.id) }}" aria-label="Читать: {{ top.title }}">
+          <div class="hero-media"
+               style="background-image:url('{{ norm_cover(top.cover, 'images/neftt.jpeg') }}');"></div>
+          <div class="hero-grad"></div>
+          <div class="hero-body">
+            <div class="eyebrow">Новости компании</div>
+            <h1 class="hero-title">{{ top.title }}</h1>
+            <div class="meta"><time datetime="{{ top.created_at.strftime('%Y-%m-%d') }}">{{ top.created_at.strftime('%d.%m.%Y') }}</time></div>
+            {% if top.excerpt %}<p class="excerpt">{{ top.excerpt }}</p>{% endif %}
+          </div>
+        </a>
+      </article>
+    {% endif %}
+
+    {# Список остальных #}
+    <div class="grid-news">
+      {% for p in posts %}
+        {% if not top or p.id != top.id %}
+          <a class="n-card" href="{{ url_for('news_detail', pid=p.id) }}">
+            <div class="n-media" style="background-image:url('{{ norm_cover(p.cover, 'images/neftt.jpeg') }}');"></div>
+            <div class="n-body">
+              <div class="n-date">{{ p.created_at.strftime('%d.%m.%Y') }}</div>
+              <div class="n-title">{{ p.title }}</div>
+              {% if p.excerpt %}<div class="excerpt" style="margin-top:4px">{{ p.excerpt }}</div>{% endif %}
+            </div>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+
+

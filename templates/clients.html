@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Клиенты — НОВОНЕФТЕХИМ{% endblock %}
+
+
+{% block head_extra %}
+<style>
+ .logos { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap:18px; }
+ .logo-card { display:grid; place-items:center; border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--card); }
+ .logo-card img { filter:none!important; opacity:1!important; max-height:56px }
+
+
+ .equip-grid{ display:grid; gap:20px; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); }
+ .equip-card{ cursor:pointer; transition:transform .2s, box-shadow .2s; }
+ .equip-card:hover{ transform: translateY(-3px); box-shadow:0 14px 34px rgba(0,0,0,.08); }
+ .equip-card .card-body { min-height:112px; }
+ .equip-card h3{ font-size:18px; margin:0 0 6px; }
+ .equip-card .meta{ font-size:13px; color:var(--muted); }
+ .equip-thumb{ aspect-ratio: 16/9; background:#f2f2f2 center/cover no-repeat; }
+ .equip-more{ font-weight:700; font-size:14px; }
+
+
+ .equip-modal .modal-content{ max-height:70vh; overflow:auto; }
+ .equip-modal h2{ margin-bottom:6px; }
+ .equip-modal .eyebrow{ margin-bottom:6px; }
+ .equip-modal .hero-img{ width:100%; border-radius:12px; border:1px solid var(--line); margin:8px 0 12px; }
+ .equip-modal ul{ margin:.25rem 0 0 1.1rem; }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<section class="section">
+ <div class="container">
+   <div class="section-head center">
+     <h1>Наши заказчики и реализованные решения</h1>
+     <p class="muted">Ниже — примеры оборудования и проектов, которые мы спроектировали и поставили.</p>
+   </div>
+
+
+    {# Логостена (оставляем) #}
+    <div class="grid logos mb-3">
+      <div class="logo-card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Gazprom_Neft_Logo.png" width="160" height="80" alt="Газпром нефть"></div>
+      <div class="logo-card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lukoil_company_logo.svg" width="160" height="80" alt="ЛУКОЙЛ"></div>
+      <div class="logo-card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Rosneft_logo.svg" width="160" height="80" alt="Роснефть"></div>
+      <div class="logo-card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Novatek_logo.svg" width="160" height="80" alt="НОВАТЭК"></div>
+      <div class="logo-card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sibur_Holding_Logo.svg" width="160" height="80" alt="СИБУР"></div>
+      <div class="logo-card"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Evraz.svg" width="160" height="80" alt="ЕВРАЗ"></div>
+    </div>
+
+
+   <!-- ДИНАМИЧЕСКИЕ карточки из БД -->
+   <div class="equip-grid">
+     {% for p in projects %}
+       {% set img = (p.image if p.image and (p.image.startswith('http') or p.image.startswith('/static/')) else ('/' ~ (p.image or ''))) %}
+       <article class="card equip-card reveal"
+         data-title="{{ p.title|e }}"
+         data-img="{{ img|e }}"
+         data-desc="{{ (p.description or '')|e }}"
+         data-purpose="{{ (p.purpose or '')|e }}"
+         data-adv="{{ (p.advantages or '')|e }}"
+         data-app="{{ (p.application or '')|e }}">
+         <div class="equip-thumb" style="background-image:url('{{ img }}')"></div>
+         <div class="card-body">
+           <h3>{{ p.title }}</h3>
+           <div class="meta">{{ p.subtitle or '' }}</div>
+           <div class="equip-more mt-1">Подробнее →</div>
+         </div>
+       </article>
+     {% else %}
+       <p class="muted">Записей пока нет. Добавьте их в админке во вкладке «Реализованные решения».</p>
+     {% endfor %}
+   </div>
+ </div>
+</section>
+
+
+<!-- Общая модалка -->
+<div class="modal equip-modal" hidden id="equipModal" aria-modal="true" role="dialog">
+ <div class="modal-backdrop" data-close></div>
+ <div class="modal-dialog">
+   <div class="modal-content">
+     <button class="modal-close" aria-label="Закрыть" data-close>×</button>
+  
+     <h2 id="equipTitle" class="mt-0"></h2>
+     <img id="equipImg" class="hero-img" alt="">
+     <p id="equipDesc" class="mb-2"></p>
+
+
+    
+     <p id="equipPurpose"></p>
+
+
+     
+     <ul id="equipAdvantages"></ul>
+
+
+     <h3 class="mt-2">Краткое описание</h3>
+     <p id="equipApp"></p>
+   </div>
+ </div>
+</div>
+{% endblock %}
+
+
+{% block body_end %}
+<script>
+(function(){
+ const modal = document.getElementById('equipModal');
+ const titleEl = document.getElementById('equipTitle');
+ const imgEl = document.getElementById('equipImg');
+ const descEl = document.getElementById('equipDesc');
+ const purposeEl = document.getElementById('equipPurpose');
+ const advEl = document.getElementById('equipAdvantages');
+ const appEl = document.getElementById('equipApp');
+
+
+ function openModal(data){
+   titleEl.textContent = data.title || '';
+   imgEl.src = data.img || '';
+   imgEl.alt = data.title || '';
+   descEl.textContent = data.desc || '';
+   purposeEl.textContent = data.purpose || '';
+
+
+   advEl.innerHTML = '';
+   (data.adv || '').split(';').map(s => s.trim()).filter(Boolean).forEach(t=>{
+     const li=document.createElement('li'); li.textContent=t; advEl.appendChild(li);
+   });
+
+
+   appEl.textContent = data.app || '';
+   modal.hidden = false;
+   document.body.style.overflow = 'hidden';
+ }
+ function closeModal(){ modal.hidden = true; document.body.style.overflow = ''; }
+
+
+ document.querySelectorAll('.equip-card').forEach(card=>{
+   card.addEventListener('click', ()=>{
+     openModal({
+       title: card.dataset.title,
+       img: card.dataset.img,
+       desc: card.dataset.desc,
+       purpose: card.dataset.purpose,
+       adv: card.dataset.adv,
+       app: card.dataset.app
+     });
+   });
+ });
+
+
+ modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) closeModal(); });
+ window.addEventListener('keydown', (e)=>{ if(!modal.hidden && e.key==='Escape') closeModal(); });
+
+
+ const els=[...document.querySelectorAll('.reveal')];
+ if(els.length){
+   const io=new IntersectionObserver(es=>{
+     es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('reveal-in'); io.unobserve(en.target); } });
+   },{threshold:.18});
+   els.forEach(el=>io.observe(el));
+ }
+})();
+</script>
+{% endblock %}
+
+
+
+
+

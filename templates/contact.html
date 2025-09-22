@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Контакты — НОВОНЕФТЕХИМ{% endblock %}
+{% block content %}
+
+
+<!-- HERO -->
+<section class="hero" style="--hero-bg:url('{{ url_for('static', filename='images/cont.png') }}')">
+  <div class="hero-content reveal">
+    <h1>Контакты</h1>
+    <p class="lead">Свяжитесь с нами любым удобным способом</p>
+  </div>
+</section>
+
+
+<!-- КОНТАКТНАЯ ФОРМА -->
+<section class="section">
+  <div class="container">
+    <div class="grid">
+      <div class="col-6 reveal">
+        <h2>Напишите нам</h2>
+
+
+        <!-- ВАЖНО: enctype для файлов -->
+        <form class="form" method="POST" action="{{ url_for('contact') }}" enctype="multipart/form-data">
+          <input class="input" type="text" name="name" placeholder="Ваше имя" required>
+          <input class="input" type="email" name="email" placeholder="Ваш email" required>
+          <textarea class="textarea" name="message" placeholder="Ваше сообщение" required></textarea>
+
+
+          <!-- Drag & drop зона + множественная загрузка -->
+          <div id="drop" class="dropzone" aria-label="Прикрепить файлы">
+            <input id="files" class="file-input" type="file" name="attachments" multiple
+                   accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.zip,.rar,.7z,.txt">
+            <div class="drop-inner">
+              <div class="ico">⬆️</div>
+              <p class="dz-title">Перетащите файлы сюда или нажмите для выбора</p>
+              <p class="dz-note">PDF, изображения, офисные документы, архивы. До 20 МБ суммарно.</p>
+            </div>
+          </div>
+          <ul id="fileList" class="file-list" aria-live="polite"></ul>
+
+
+          <button type="submit" class="btn">Отправить</button>
+        </form>
+      </div>
+
+
+      <div class="col-6 reveal">
+        <h2>Контакты</h2>
+        <p>📍 630099 г. Новосибирск, ул. Депутатская, 2</p>
+        <p>☎ +7 (383) 383-24-24</p>
+        <p>✉ info@novoneftehim.ru</p>
+
+
+        <!-- TELEGRAM CTA -->
+        <div class="tg-contact">
+          <h3>Написать в Telegram</h3>
+          <p>Мы онлайн и отвечаем быстро.</p>
+          <a href="https://t.me/tychinskiybogdan" target="_blank" class="btn btn-tg">Открыть Telegram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% endblock %}
+
+
+{% block body_end %}
+<style>
+  .dropzone{position:relative;border:2px dashed rgba(0,0,0,.15);border-radius:14px;padding:18px;background:rgba(0,0,0,.02);transition:.2s}
+  .dropzone.focus{border-color:#0a84ff;background:rgba(10,132,255,.06)}
+  .file-input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .drop-inner{pointer-events:none;text-align:center}
+  .drop-inner .ico{font-size:22px;margin-bottom:6px}
+  .dz-title{margin:0;font-weight:600}
+  .dz-note{margin:.25rem 0 0;color:#6e6e73;font-size:13px}
+  .file-list{list-style:none;margin:10px 0 0;padding:0}
+  .file-list li{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;border:1px solid rgba(0,0,0,.08);border-radius:10px;margin-bottom:6px;background:#fff}
+  .file-list small{color:#6e6e73}
+</style>
+<script>
+(() => {
+  const dz = document.getElementById('drop');
+  const input = document.getElementById('files');
+  const list = document.getElementById('fileList');
+  const MAX_TOTAL = 20 * 1024 * 1024; // 20MB
+  const MAX_FILE  = 15 * 1024 * 1024; // 15MB
+
+
+  function fmtSize(b){ if(b<1024) return b+' B'; const kb=b/1024; if(kb<1024) return kb.toFixed(1)+' KB'; return (kb/1024).toFixed(1)+' MB'; }
+
+
+  function render(files){
+    list.innerHTML = '';
+    let total = 0;
+    [...files].forEach(f => { total += f.size; });
+    if (total > MAX_TOTAL) {
+      alert('Суммарный размер файлов превышает 20 МБ. Удалите лишнее.');
+      input.value = '';
+      return;
+    }
+    [...files].forEach(f => {
+      if (f.size > MAX_FILE) {
+        alert(`Файл "${f.name}" больше 15 МБ и не будет отправлен.`);
+      }
+    });
+    [...files].forEach(f => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${f.name}</span><small>${fmtSize(f.size)}</small>`;
+      list.appendChild(li);
+    });
+  }
+
+
+  input.addEventListener('change', e => render(e.target.files));
+
+
+  dz.addEventListener('dragenter', () => dz.classList.add('focus'));
+  dz.addEventListener('dragleave', () => dz.classList.remove('focus'));
+  dz.addEventListener('drop', () => dz.classList.remove('focus'));
+})();
+</script>
+
+
+<!-- scroll-reveal -->
+<script>
+(()=>{const els=[...document.querySelectorAll('.reveal')];if(!els.length)return;
+const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('reveal-in');io.unobserve(en.target)}})},{threshold:.18});
+els.forEach(el=>io.observe(el))})();
+</script>
+{% endblock %}
+
+
+
+
+

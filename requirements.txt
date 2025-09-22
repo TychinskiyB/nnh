@@ -1,0 +1,9 @@
+Flask>=2.0
+requests>=2.28
+flask-limiter>=2.0    # optional but рекомендован
+python-magic>=0.4.24  # optional, для MIME-проверки
+
+
+
+
+

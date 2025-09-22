@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+{% block title %}Вакансии — НОВОНЕФТЕХИМ{% endblock %}
+
+
+{% block head_extra %}
+<style>
+/* ===== TOOLBAR ===== */
+.vac-toolbar{
+  display:flex;gap:12px;flex-wrap:wrap;
+  align-items:center;justify-content:space-between;
+  margin-bottom:22px
+}
+.vac-filters{display:flex;gap:10px;flex-wrap:wrap}
+.vac-filters .btn{
+  padding:8px 16px;border-radius:999px;border:1px solid var(--line);
+  background:var(--card);font-size:14px;font-weight:500;color:var(--ink);
+  transition:.2s background,.2s color,.2s transform
+}
+.vac-filters .btn:hover{background:var(--paper);transform:translateY(-1px)}
+.vac-filters .btn[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.vac-search{display:flex;align-items:center;min-width:240px;flex:1;max-width:400px;margin-left:auto}
+.vac-search .input{width:100%;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card)}
+
+
+/* ===== GRID & CARDS ===== */
+.vac-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.vac-card{
+  cursor:pointer;transition:transform .2s, box-shadow .2s;
+  border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden
+}
+.vac-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.08)}
+.vac-card .card-body{
+  padding:18px; display:flex; flex-direction:column; gap:6px; min-height:140px;
+}
+.vac-card h3{margin:0; line-height:1.25; font-size:18px}
+.vac-card .meta{font-size:14px;color:var(--ink-muted)}
+.vac-card .badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;border-radius:999px;padding:4px 12px;
+  background:var(--paper);border:1px solid var(--line);color:var(--ink-muted);
+  margin-top:auto; /* ← закрепляем бейдж у низа карточки, чтобы не наезжал */
+}
+.badge.dot::before{content:"";width:8px;height:8px;border-radius:50%}
+.badge.office.dot::before{background:#5c94e8}
+.badge.plant.dot::before{background:#1c9330}
+
+
+/* ===== EMPTY STATE ===== */
+.vac-empty{text-align:center;color:var(--ink-muted);padding:32px 6px;font-size:16px}
+
+
+/* ===== MODAL (скроллящаяся) ===== */
+.modal[hidden]{display:none}
+.modal{
+  position:fixed; inset:0; z-index:1000; display:grid; place-items:center;
+}
+.modal-backdrop{
+  position:absolute; inset:0; background:rgba(0,0,0,.45);
+}
+.modal-dialog{
+  position:relative; width:min(760px, 94vw); max-height:90vh; display:flex;
+}
+.vac-modal .modal-content{
+  background:var(--card); border-radius:16px; padding:24px; box-shadow:0 14px 34px rgba(0,0,0,.15);
+  overflow:auto; max-height:90vh;
+  -webkit-overflow-scrolling: touch; /* iOS smooth */
+  overscroll-behavior: contain;
+  touch-action: pan-y; /* разрешить вертикальный скролл внутри модалки */
+}
+.modal-close{
+  position:absolute; top:10px; right:12px; width:32px; height:32px;
+  border-radius:8px; border:1px solid var(--line); background:var(--paper); cursor:pointer
+}
+.vac-modal h2{margin:0 0 4px}
+.vac-modal .muted{color:var(--ink-muted);margin:0 0 12px}
+.vac-modal .card{border-radius:12px;border:1px solid var(--line);background:var(--paper)}
+.vac-modal .card-body{padding:10px 12px;font-size:14px}
+.vac-modal h3{font-size:18px;margin:16px 0 6px}
+.vac-modal p{margin:0 0 12px;line-height:1.5}
+
+/* --- FIX: бейдж внутри карточки не абсолютный и уезжает вниз --- */
+.vac-card .card-body{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-height:140px;
+  
+}
+.vac-card h3{margin:0; line-height:1.25}
+.vac-card .badge{
+  position:static !important;   /* переубиваем любые глобальные absolute */
+  margin-top:auto;              /* держим бейдж у низа карточки */
+  z-index:auto !important;      /* не заслоняет текст */
+  background: rgb(189, 192, 197);
+}
+
+
+
+
+
+
+
+/* ===== APPLY FORM ===== */
+.apply-form .input,.apply-form .textarea{
+  border-radius:12px;padding:10px 12px;margin-top:8px;
+  border:1px solid var(--line);background:var(--paper)
+}
+.apply-form button{margin-top:12px;width:100%;border-radius:12px;font-size:16px;font-weight:600}
+</style>
+{% endblock %}
+
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="section-head center">
+      <h1>Вакансии</h1>
+      {% if addr_office and addr_plant %}
+      <p class="muted">Офис: {{ addr_office }} &nbsp;•&nbsp; Производство: {{ addr_plant }}</p>
+      {% endif %}
+    </div>
+
+
+    <!-- Фильтры и поиск -->
+    <div class="vac-toolbar">
+      <div class="vac-filters" role="tablist" aria-label="Фильтр локаций">
+        <button class="btn" data-filter="all" aria-pressed="true">Все</button>
+        <button class="btn" data-filter="office" aria-pressed="false">Офис</button>
+        <button class="btn" data-filter="plant" aria-pressed="false">Производство</button>
+      </div>
+      <div class="vac-search">
+        <input class="input" id="vacSearch" type="search" placeholder="Поиск по должности…">
+      </div>
+    </div>
+
+
+    <div class="vac-grid" id="vacGrid">
+      {% for v in items %}
+      {% set loc_key = 'office' if v.location == 'office' else 'plant' %}
+      <article class="card vac-card"
+        data-id="{{ v.id }}"
+        data-title="{{ v.title|e }}"
+        data-salary="{{ (v.salary or '')|e }}"
+        data-payperiod="{{ (v.pay_period or '')|e }}"
+        data-exp="{{ (v.experience or '')|e }}"
+        data-etype="{{ (v.employment_type or '')|e }}"
+        data-schedule="{{ (v.schedule or '')|e }}"
+        data-hours="{{ (v.work_hours or '')|e }}"
+        data-format="{{ (v.work_format or '')|e }}"
+        data-desc="{{ (v.description or '')|e }}"
+        data-location="{{ v.location_human|e }}"
+        data-loc-key="{{ loc_key }}">
+        <div class="card-body">
+          <h3 class="vac-title">{{ v.title }}</h3>
+          <div class="meta">{{ v.salary or 'З/п по договоренности' }}</div>
+          <span class="badge dot {{ loc_key }}">{{ 'Офис' if loc_key=='office' else 'Производство' }}</span>
+        </div>
+      </article>
+      {% else %}
+        <p class="muted">Пока нет открытых вакансий.</p>
+      {% endfor %}
+    </div>
+
+
+    <div class="vac-empty" id="vacEmpty">По вашему запросу вакансий не найдено.</div>
+  </div>
+</section>
+
+
+<!-- Модалка с деталями и формой отклика -->
+<div class="modal vac-modal" id="vacModal" hidden aria-modal="true" role="dialog">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Закрыть" data-close>×</button>
+      <h2 id="mTitle" class="mt-0"></h2>
+      <p class="muted" id="mLoc"></p>
+
+
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px">
+        <div class="card"><div class="card-body"><strong>Зарплата:</strong> <span id="mSalary"></span></div></div>
+        <div class="card"><div class="card-body"><strong>Выплаты:</strong> <span id="mPP"></span></div></div>
+        <div class="card"><div class="card-body"><strong>Опыт:</strong> <span id="mExp"></span></div></div>
+        <div class="card"><div class="card-body"><strong>Занятость:</strong> <span id="mET"></span></div></div>
+        <div class="card"><div class="card-body"><strong>График:</strong> <span id="mSch"></span></div></div>
+        <div class="card"><div class="card-body"><strong>Часы:</strong> <span id="mHrs"></span></div></div>
+        <div class="card"><div class="card-body"><strong>Формат:</strong> <span id="mFmt"></span></div></div>
+      </div>
+
+
+      <h3 class="mt-2">Описание</h3>
+      <p id="mDesc"></p>
+
+
+      <hr>
+
+
+      <h3 class="mt-2">Откликнуться</h3>
+      <form id="applyForm" class="apply-form" method="POST">
+        <input class="input" name="name" placeholder="ФИО" required>
+        <input class="input mt-1" name="phone" placeholder="Телефон" required>
+        <textarea class="textarea mt-1" name="note" placeholder="Краткая информация"></textarea>
+        <button class="btn btn-primary mt-1" type="submit">Отправить</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block body_end %}
+<script>
+(function(){
+  // --- фильтрация и поиск ---
+  const grid = document.getElementById('vacGrid');
+  const cards = Array.from(grid.querySelectorAll('.vac-card'));
+  const empty = document.getElementById('vacEmpty');
+
+
+  const filterBtns = document.querySelectorAll('.vac-filters .btn');
+  const searchInput = document.getElementById('vacSearch');
+
+
+  let curFilter = 'all'; // all | office | plant
+  let query = '';
+
+
+  function normalize(s){ return (s||'').toLowerCase().trim(); }
+
+
+  function applyFilters(){
+    const q = normalize(query);
+    let visibleCount = 0;
+
+
+    cards.forEach(card=>{
+      const loc = card.dataset.locKey; // office | plant
+      const title = normalize(card.querySelector('.vac-title')?.textContent);
+
+
+      const passFilter = (curFilter === 'all') || (loc === curFilter);
+      const passSearch = !q || (title.includes(q));
+
+
+      const show = passFilter && passSearch;
+      card.style.display = show ? '' : 'none';
+      if(show) visibleCount++;
+    });
+
+
+    empty.style.display = visibleCount ? 'none' : 'block';
+  }
+
+
+  filterBtns.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      filterBtns.forEach(b=>b.setAttribute('aria-pressed','false'));
+      btn.setAttribute('aria-pressed','true');
+      curFilter = btn.dataset.filter; // all | office | plant
+      applyFilters();
+    });
+  });
+
+
+  searchInput.addEventListener('input', (e)=>{
+    query = e.target.value;
+    applyFilters();
+  });
+
+
+  // --- модалка ---
+  const modal = document.getElementById('vacModal');
+  const fill = (id, v) => document.getElementById(id).textContent = v || '—';
+
+
+  function openModal(card){
+    document.getElementById('mTitle').textContent = card.dataset.title || '';
+    fill('mLoc', card.dataset.location);
+    fill('mSalary', card.dataset.salary || 'по договоренности');
+    fill('mPP', card.dataset.payperiod);
+    fill('mExp', card.dataset.exp);
+    fill('mET', card.dataset.etype);
+    fill('mSch', card.dataset.schedule);
+    fill('mHrs', card.dataset.hours);
+    fill('mFmt', card.dataset.format);
+    fill('mDesc', card.dataset.desc);
+
+
+    const form = document.getElementById('applyForm');
+    form.action = `/vacancies/${card.dataset.id}/apply`;
+
+
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden'; // блокируем скролл фона
+  }
+  function closeModal(){
+    modal.hidden = true;
+    document.body.style.overflow = ''; // возвращаем скролл фона
+  }
+
+
+  cards.forEach(c=>{
+    c.addEventListener('click', ()=>openModal(c));
+  });
+  modal.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) closeModal(); });
+  window.addEventListener('keydown', (e)=>{ if(!modal.hidden && e.key==='Escape') closeModal(); });
+
+
+  // начальный прогон
+  applyFilters();
+})();
+</script>
+{% endblock %}
+
+
+
+
+

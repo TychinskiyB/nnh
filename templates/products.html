@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Оборудование — НОВОНЕФТЕХИМ{% endblock %}
+
+{% block head_extra %}
+<style>
+.hero .hero-content h1 {
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.2;
+  max-width: 720px;          /* ограничиваем ширину, чтобы ломалось в 2 строки */
+  margin: 0 auto 0.5em;
+  word-break: break-word;    /* перенос длинных слов */
+  text-align: center;
+}
+
+
+/* Подзаголовок: цвет как у заголовка */
+.hero .hero-content .lead {
+  color: inherit;            /* унаследует белый из hero-dark */
+  font-size: 18px;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.steps{display:grid;gap:18px}
+.step{display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:center;
+      padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.step .n{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;
+         font-weight:700;background:linear-gradient(135deg,#0a84ff,#64d2ff);color:#fff}
+@media (min-width:980px){.steps{grid-template-columns:repeat(4,1fr)}}
+.tabs{display:flex;gap:8px;justify-content:center;margin:12px 0 22px}
+.tab{height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}
+.tab[aria-selected="true"]{background:#f2f6ff;border-color:#dfe9ff;color:#0a49a7}
+.hidden{display:none!important}
+.card-cta{border-radius:16px;border:1px solid var(--line);padding:20px;text-align:center}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero hero-dark" style="--hero-bg:url('{{ url_for('static', filename='images/neftt.jpeg') }}')">
+  <div class="hero-content reveal">
+    <h1>
+      Производим и импортируем<br>
+      промышленное оборудование
+    </h1>
+    <p class="lead">
+      Подбираем, проектируем, изготавливаем и привозим с документацией и сервисом
+    </p>
+    <div class="mt-2">
+      <a class="btn" href="{{ url_for('contact') }}">Получить предложение</a>
+    </div>
+  </div>
+</section>
+
+<!-- ЧТО МЫ ДЕЛАЕМ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal">
+      <h2>Что мы делаем</h2>
+    </div>
+    <div class="grid reveal">
+      <article class="card col-4"><div class="card-body"><h3>Инжиниринг</h3><p>Подбор и расчёт под конкретные условия.</p></div></article>
+      <article class="card col-4"><div class="card-body"><h3>Производство</h3><p>Изготовление узлов и блоков «под ключ».</p></div></article>
+      <article class="card col-4"><div class="card-body"><h3>Импорт оборудования</h3><p>Контракты, логистика, сертификация, доставка.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- КАК ЭТО ПРОИСХОДИТ -->
+<section class="section alt">
+  <div class="container">
+    <div class="section-head center reveal">
+      <h2>Как это происходит</h2>
+      <div class="tabs reveal" role="tablist">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="pane-prod" id="tab-prod">Производство</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="pane-import" id="tab-import">Импорт</button>
+      </div>
+    </div>
+
+    <!-- Производство -->
+    <div id="pane-prod" role="tabpanel" aria-labelledby="tab-prod">
+      <div class="steps reveal">
+        <div class="step"><div class="n">1</div><div><h3>Обсуждение</h3><p>ТЗ, вводные и ограничения.</p></div></div>
+        <div class="step"><div class="n">2</div><div><h3>Проект</h3><p>Расчёты, схема, спецификация, сроки и стоимость.</p></div></div>
+        <div class="step"><div class="n">3</div><div><h3>Изготовление</h3><p>Производство, испытания, документация.</p></div></div>
+        <div class="step"><div class="n">4</div><div><h3>Поставка</h3><p>Доставка, шеф-монтаж, обучение и ввод.</p></div></div>
+      </div>
+      <p class="process-note reveal">Есть чертёж или эскиз? Пришлите — подготовим спецификацию и сроки.</p>
+      <div class="center mt-2 reveal">
+        <a class="btn" href="{{ url_for('contact') }}">Описать задачу</a>
+        <a class="btn btn-ghost" href="{{ url_for('clients') }}">Смотреть реализованные проекты</a>
+      </div>
+    </div>
+
+    <!-- Импорт -->
+    <div id="pane-import" class="hidden" role="tabpanel" aria-labelledby="tab-import">
+      <div class="steps reveal">
+        <div class="step"><div class="n">1</div><div><h3>Подбор и оффер</h3><p>Поиск поставщика, сравнение по TCO/срокам.</p></div></div>
+        <div class="step"><div class="n">2</div><div><h3>Контракт</h3><p>Условия Incoterms, валютные расчёты, гарантия.</p></div></div>
+        <div class="step"><div class="n">3</div><div><h3>Логистика</h3><p>Маршрут, упаковка, страховка, сертификация.</p></div></div>
+        <div class="step"><div class="n">4</div><div><h3>Доставка</h3><p>Таможня и финальная доставка на площадку.</p></div></div>
+      </div>
+    <p class="process-note reveal">Есть чертёж или эскиз? Пришлите — подготовим спецификацию и сроки.</p>
+      <div class="center mt-2 reveal">
+        <a class="btn" href="{{ url_for('contact') }}">Описать задачу</a>
+        <a class="btn btn-ghost" href="{{ url_for('clients') }}">Смотреть реализованные проекты</a>
+      </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <div class="container">
+    <div class="card-cta reveal">
+      <h2 class="mt-0">Есть ТЗ или спецификация?</h2>
+      <p class="muted">Пришлите — подготовим варианты: изготовление или импорт, сроки и стоимость.</p>
+      <a class="btn mt-1" href="{{ url_for('contact') }}">Отправить запрос</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block body_end %}
+<script>
+// tabs переключение
+(function(){
+  const tabProd=document.getElementById('tab-prod');
+  const tabImport=document.getElementById('tab-import');
+  const paneProd=document.getElementById('pane-prod');
+  const paneImport=document.getElementById('pane-import');
+
+  function select(which){
+    const isProd=which==='prod';
+    tabProd.setAttribute('aria-selected',isProd);
+    tabImport.setAttribute('aria-selected',!isProd);
+    paneProd.classList.toggle('hidden',!isProd);
+    paneImport.classList.toggle('hidden',isProd);
+  }
+  tabProd.addEventListener('click',()=>select('prod'));
+  tabImport.addEventListener('click',()=>select('import'));
+})();
+
+// reveal
+(()=>{const els=[...document.querySelectorAll('.reveal')];if(!els.length)return;
+ const io=new IntersectionObserver(es=>{
+   es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('reveal-in');io.unobserve(en.target)}})
+ },{threshold:.18});
+ els.forEach(el=>io.observe(el));
+})();
+</script>
+{% endblock %}
+
+
+

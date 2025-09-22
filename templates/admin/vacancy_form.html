@@ -1,0 +1,87 @@
+{% extends "admin/base.html" %}
+{% block admin %}
+<h2 class="mt-0">{{ 'Новая вакансия' if not item else ('Редактирование — ' ~ item.title) }}</h2>
+
+
+<form method="POST" class="form">
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+    <div>
+      <div class="form-label">Локация</div>
+      <select name="location" required>
+        {% set loc = item.location if item else 'office' %}
+        <option value="office" {{ 'selected' if loc == 'office' else '' }}>Офис — Новосибирск, Депутатская 2</option>
+        <option value="plant"  {{ 'selected' if loc == 'plant'  else '' }}>Производство — Новосибирск, Электровозная 3 к1</option>
+      </select>
+    </div>
+
+
+    <div>
+      <div class="form-label">Должность *</div>
+      <input class="input" name="title" value="{{ item.title if item else '' }}" required>
+    </div>
+
+
+    <div>
+      <div class="form-label">Заработная плата</div>
+      <input class="input" name="salary" value="{{ item.salary if item else '' }}" placeholder="напр. 80 000–120 000 ₽">
+    </div>
+
+
+    <div>
+      <div class="form-label">Частота выплат</div>
+      <input class="input" name="pay_period" value="{{ item.pay_period if item else '' }}" placeholder="напр. 2 раза в месяц">
+    </div>
+
+
+    <div>
+      <div class="form-label">Опыт работы</div>
+      <input class="input" name="experience" value="{{ item.experience if item else '' }}" placeholder="напр. от 1 года">
+    </div>
+
+
+    <div>
+      <div class="form-label">Занятость</div>
+      <select name="employment_type">
+        {% set et = item.employment_type if item else 'полная' %}
+        <option value="полная" {{ 'selected' if et=='полная' else '' }}>полная</option>
+        <option value="неполная" {{ 'selected' if et=='неполная' else '' }}>частичная</option>
+      </select>
+    </div>
+
+
+    <div>
+      <div class="form-label">График</div>
+      <input class="input" name="schedule" value="{{ item.schedule if item else '' }}" placeholder="напр. 5/2">
+    </div>
+
+
+    <div>
+      <div class="form-label">Рабочие часы</div>
+      <input class="input" name="work_hours" value="{{ item.work_hours if item else '' }}" placeholder="напр. 9:00–18:00">
+    </div>
+
+
+    <div>
+      <div class="form-label">Формат работы</div>
+      <input class="input" name="work_format" value="{{ item.work_format if item else '' }}" placeholder="офис / гибрид / удалённо">
+    </div>
+  </div>
+
+
+  <div class="mt-2">
+    <div class="form-label">Описание</div>
+    <textarea class="textarea" name="description" placeholder="Кратко об обязанностях и требованиях">{{ item.description if item else '' }}</textarea>
+  </div>
+
+
+  <div class="mt-2">
+    <button class="btn btn-primary" type="submit">Сохранить</button>
+    <a class="btn" href="{{ url_for('admin_vacancies_list') }}">Отмена</a>
+  </div>
+</form>
+{% endblock %}
+
+
+
+
+

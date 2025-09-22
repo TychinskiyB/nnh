@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+{% block title %}О компании — НОВОНЕФТЕХИМ{% endblock %}
+
+{% block content %}
+
+<!-- 👇 Локальные правки стилей для этой страницы -->
+<style>
+  .about-page .team-photo{
+    height: auto !important;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+  .about-page .team-photo img{
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    display: block;
+  }
+
+  /* === 4 карточки в ряд, всегда по центру === */
+  .about-page #team-grid{
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(4, 260px); /* четыре фиксированных колонки */
+    justify-content: center;   /* сетка всегда по центру контейнера */
+    align-items: start;
+  }
+  .about-page #team-grid .span-2{ grid-column: span 2; }
+
+  @media (max-width: 1024px){
+    .about-page #team-grid{
+      grid-template-columns: repeat(2, 260px); /* на планшете по 2 */
+    }
+  }
+
+  @media (max-width: 560px){
+    .about-page #team-grid{
+      grid-template-columns: 1fr; /* на телефоне по 1 */
+      gap: 16px;
+    }
+    .about-page #team-grid .span-2{ grid-column: span 1; }
+  }
+
+    /* Подзаголовок на hero: тот же цвет, что и заголовок */
+  .about-page .hero-dark .lead {
+    color: inherit;        /* наследует цвет от родителя (как у h1) */
+    text-shadow: inherit;  /* и тень, если есть у заголовка */
+  }
+
+
+
+</style>
+
+
+
+
+
+<div class="about-page"><!-- scope для локальных стилей -->
+
+  <!-- HERO -->
+  <section
+   class="hero hero-dark"
+   style="
+     --hero-bg:url('{{ url_for('static', filename='images/neftt.jpeg') }}');
+     --hero-pos: top center;
+   "
+  >
+   <div class="hero-content">
+     <h1>О компании</h1>
+     <p class="lead">НОВОНЕФТЕХИМ — ваш надёжный партнёр в поставке промышленного оборудования</p>
+   </div>
+  </section>
+
+  <!-- Ключевые вехи -->
+  <section class="section">
+   <div class="container">
+     <div class="section-head center">
+       <h2>Ключевые вехи</h2>
+     </div>
+
+     <ol class="timeline">
+       <li>
+         <div class="tl-dot"></div>
+         <div class="tl-content">
+           <h3>2013</h3>
+           <p>📍 16 августа в Новосибирске зарегистрирована компания, ставшая основой будущего НОВОНЕФТЕХИМа. С самого начала мы взяли курс на то, чтобы сложное оборудование становилось понятным, а надёжное — доступным.</p>
+         </div>
+       </li>
+
+       <li>
+         <div class="tl-dot"></div>
+         <div class="tl-content">
+           <h3>2014</h3>
+           <p>В январе Иван Лещинский становится единственным учредителем. Компания получает название, под которым вскоре её узнают во всей стране.</p>
+         </div>
+       </li>
+
+       <li>
+         <div class="tl-dot"></div>
+         <div class="tl-content">
+           <h3>2014–2016</h3>
+           <p>Период становления: работа над небольшими, но значимыми проектами, накопление опыта и формирование ключевых компетенций.</p>
+         </div>
+       </li>
+
+       <li>
+         <div class="tl-dot"></div>
+         <div class="tl-content">
+           <h3>2016</h3>
+           <p>🔥 Первые крупные партнёры: Роснефть, Газпромнефть, Сибур, Евраз. Мы доказали, что сибирская инженерная школа — это реальный стандарт качества.</p>
+         </div>
+       </li>
+
+       <li>
+         <div class="tl-dot"></div>
+         <div class="tl-content">
+           <h3>2018</h3>
+           <p>💪 Реализован масштабный проект для ОНПЗ — установка обезвоживания шлама на базе шламоосушающего контейнера. Этот опыт показал, что «невозможные» задачи — именно наша специализация.</p>
+         </div>
+       </li>
+
+       <li>
+         <div class="tl-dot"></div>
+         <div class="tl-content">
+           <h3>2022</h3>
+           <p>🏷️ Запуск проектов под собственным брендом. Наше имя стало символом инженерной креативности и качества.</p>
+         </div>
+       </li>
+
+       <li>
+         <div class="tl-dot"></div>
+         <div class="tl-content">
+           <h3>2025</h3>
+           <p>🚀 Старт масштабного расширения производства. Мы выходим на новый уровень — берёмся за более сложные проекты и создаём больше решений для отрасли.</p>
+         </div>
+       </li>
+     </ol>
+   </div>
+  </section>
+
+  <!-- Команда (динамика из БД) -->
+  <section class="section">
+   <div class="container">
+     <div class="section-head center">
+       <h2>Команда</h2>
+       <p>Кросс-функциональные группы инженеров, проектировщиков и сервисных специалистов.</p>
+     </div>
+
+     {# Чипсы-фильтры (формируются из depts) #}
+     <div class="chips center" id="dept-filters" {% if not depts %}hidden{% endif %}>
+       <button class="chip active" data-dept="__all__">Все</button>
+       {% for d in depts %}
+         {% set d_norm = (d or '')|trim|lower %}
+         <button class="chip" data-dept="{{ d_norm|e }}">{{ d }}</button>
+       {% endfor %}
+     </div>
+
+     <!-- Мозаика сотрудников -->
+     <div class="team-mosaic" id="team-grid">
+       {% for e in employees %}
+         {% set dept_norm = (e.dept or '')|trim|lower %}
+         <article class="team-card {% if e.span2 %}span-2{% endif %}"
+                  data-dept="{{ dept_norm|e }}"
+                  data-name="{{ e.full_name|e }}"
+                  data-title="{{ e.title|e }}"
+                  data-email="{{ (e.email or '')|e }}"
+                  data-phone="{{ (e.phone or '')|e }}"
+                  data-photo="{{ (e.photo if e.photo and (e.photo.startswith('http') or e.photo.startswith('/static/')) else ('/' ~ (e.photo or ''))) | e }}">
+           <div class="team-photo">
+             {% if e.photo %}
+               <img src="{{ e.photo if e.photo.startswith('http') or e.photo.startswith('/static/') else '/' ~ e.photo }}"
+                    alt="{{ e.full_name|e }}">
+             {% else %}
+               <img src="{{ url_for('static', filename='images/placeholder_user.jpg') }}"
+                    alt="{{ e.full_name|e }}">
+             {% endif %}
+           </div>
+           <div class="team-body">
+             <h3>{{ e.full_name }}</h3>
+             <p class="role">{{ e.title }} — {{ e.dept }}</p>
+           </div>
+         </article>
+       {% else %}
+         <p class="muted center" style="grid-column: 1 / -1;">Сотрудники пока не добавлены.</p>
+       {% endfor %}
+     </div>
+   </div>
+  </section>
+
+  <!-- Модалка карточки сотрудника -->
+  <div class="modal" id="empModal" hidden>
+   <div class="modal-backdrop" data-close></div>
+   <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="empName">
+     <button class="modal-close" aria-label="Закрыть" data-close>×</button>
+     <div class="modal-content">
+       <div class="emp-header">
+         <img id="empPhoto" class="emp-photo" src="" alt="" />
+         <div>
+           <h3 id="empName"></h3>
+           <p class="muted" id="empDeptTitle"></p>
+         </div>
+       </div>
+       <div class="mt-2">
+         <p><strong>Почта:</strong> <a id="empEmail" href="#"></a></p>
+         <p><strong>Телефон:</strong> <span id="empPhone">—</span></p>
+       </div>
+     </div>
+   </div>
+  </div>
+
+</div><!-- /about-page -->
+
+{% endblock %}
+
+{% block body_end %}
+<script>
+/* Фильтры отделов (нормализация, устойчиво к регистру/пробелам) */
+(function () {
+  const bar  = document.getElementById('dept-filters');
+  const grid = document.getElementById('team-grid');
+  if (!grid) return;
+
+  const cards = Array.from(grid.querySelectorAll('.team-card'));
+  const norm = s => (s || '').toString().trim().toLowerCase();
+
+  function apply(dept) {
+    const wantAll = (dept === '__all__');
+    cards.forEach(c => {
+      const cd = norm(c.dataset.dept);
+      const show = wantAll || cd === dept;
+      c.style.display = show ? '' : 'none';
+    });
+    /* Сетка фиксирована (4×260px) и центрирована — ничего не «раздувается» */
+  }
+
+  if (bar && bar.hidden !== true) {
+    const chips = Array.from(bar.querySelectorAll('.chip'));
+    bar.addEventListener('click', e => {
+      const btn = e.target.closest('.chip'); if (!btn) return;
+      chips.forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      apply(btn.dataset.dept);
+    });
+  }
+})();
+
+/* Модалка сотрудника */
+(function () {
+  const grid  = document.getElementById('team-grid');
+  const modal = document.getElementById('empModal');
+  if (!grid || !modal) return;
+
+  const nameEl  = modal.querySelector('#empName');
+  const dtEl    = modal.querySelector('#empDeptTitle');
+  const emailEl = modal.querySelector('#empEmail');
+  const phoneEl = modal.querySelector('#empPhone');
+  const photoEl = modal.querySelector('#empPhoto');
+
+  function open(card){
+    const name  = card.dataset.name  || '';
+    the_title   = card.dataset.title || '';
+    const dept  = card.dataset.dept  || '';
+    const email = card.dataset.email || '';
+    const phone = card.dataset.phone || '';
+    const photo = card.dataset.photo || '';
+
+    nameEl.textContent = name;
+    dtEl.textContent   = [the_title, dept].filter(Boolean).join(' — ');
+    emailEl.textContent = email || '—';
+    emailEl.href        = email ? ('mailto:' + email) : '#';
+    phoneEl.textContent = phone || '—';
+
+    if (photo) { photoEl.src = photo; photoEl.alt = name; photoEl.style.display=''; }
+    else { photoEl.style.display='none'; }
+
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    modal.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  grid.addEventListener('click', e => {
+    const card = e.target.closest('.team-card'); if (!card) return;
+    open(card);
+  });
+  modal.addEventListener('click', e => {
+    if (e.target.dataset.close !== undefined || e.target.classList.contains('modal')) close();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) close(); });
+})();
+</script>
+{% endblock %}
+
+
+

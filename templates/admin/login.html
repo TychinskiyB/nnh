@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Вход — НОВОНЕФТЕХИМ{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width:520px;">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="mt-0">Авторизация</h2>
+
+        {% with msgs = get_flashed_messages(with_categories=true) %}
+          {% if msgs %}
+            <div class="mb-1">
+              {% for cat, msg in msgs %}
+                <div class="alert {{ 'alert-ok' if cat=='success' else 'alert-warn' }}">
+                  {{ msg }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="form">
+          <input class="input" type="text" name="login" placeholder="Логин" required autofocus>
+          <input class="input" type="password" name="password" placeholder="Пароль" required>
+          <button class="btn btn-primary mt-1" type="submit">Войти</button>
+        </form>
+      </div>
+    </div>
+
+    <style>
+      .alert{padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin-top:8px}
+      .alert-ok{background:#f2fff7;border-color:#d7f3e2}
+      .alert-warn{background:#fff8f0;border-color:#ffe0b8}
+    </style>
+  </div>
+</section>
+{% endblock %}
+
+
+
