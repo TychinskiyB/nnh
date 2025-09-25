@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+{% block admin %}
+
+<h2 class="mt-0">{{ 'Редактировать новость' if post else 'Новая новость' }}</h2>
+
+<form method="POST" enctype="multipart/form-data" class="form">
+  <input class="input" name="title" placeholder="Заголовок" value="{{ post.title if post else '' }}" required>
+  <input class="input" name="excerpt" placeholder="Краткое описание" value="{{ post.excerpt if post else '' }}">
+  <textarea class="textarea" name="body" placeholder="Полный текст">{{ post.body if post else '' }}</textarea>
+
+  <label class="mt-1">Обложка (URL или загрузка файла)</label>
+  <input class="input" name="cover" placeholder="static/images/cover.jpg" value="{{ post.cover if post else '' }}">
+  <input type="file" name="cover_file" accept="image/*">
+
+  <label class="checkbox mt-1">
+    <input type="checkbox" name="pinned" {% if post and post.pinned %}checked{% endif %}> Закрепить на главной
+  </label>
+
+  <hr>
+
+  <h3 class="mt-0">Галерея фотографий</h3>
+  <p class="muted">Можно выбрать сразу несколько файлов (зажмите Shift/Ctrl) — они добавятся к уже существующим.</p>
+  <input type="file" name="gallery_files" accept="image/*" multiple>
+
+  <label class="mt-1">Или вставьте URL/пути (по одному в строке)</label>
+  <textarea class="textarea" name="gallery_urls" placeholder="https://... или static/uploads/...."></textarea>
+
+  {% if images %}
+    <div class="mt-1">
+      <h4 class="mt-0">Текущие фото</h4>
+      <table class="table">
+        <thead><tr><th>Превью</th><th>Путь</th><th style="width:140px;">Порядок</th><th></th></tr></thead>
+        <tbody>
+        {% for img in images %}
+          <tr>
+            <td style="width:120px">
+              <img src="{{ img.path if img.path.startswith('http') or img.path.startswith('/static/') else '/' ~ img.path }}" alt="" style="width:110px;height:70px;object-fit:cover;border-radius:6px;">
+            </td>
+            <td>{{ img.path }}</td>
+            <td><input class="input" type="number" name="sort_{{ img.id }}" value="{{ img.sort_order }}" style="max-width:120px"></td>
+            <td class="right">
+              <form action="{{ url_for('admin_news_image_delete', pid=post.id, iid=img.id) }}" method="POST" onsubmit="return confirm('Удалить это фото?')" style="display:inline">
+                <button class="btn" type="submit">Удалить</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <p class="muted">Чтобы применить изменения порядка — измените числа и нажмите «Сохранить» ниже.</p>
+    </div>
+  {% endif %}
+
+  <button class="btn mt-1" type="submit">Сохранить</button>
+</form>
+
+{% endblock %}
+
+
+

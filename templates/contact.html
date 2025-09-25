@@ -1,0 +1,501 @@
+{% extends "base.html" %}
+{% block title %}Контакты — НОВОНЕФТЕХИМ{% endblock %}
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero" style="--hero-bg:url('{{ url_for('static', filename='images/cont.png') }}')">
+  <div class="hero-content reveal">
+    <h1 class="hero-title">Контакты</h1>
+    <p class="hero-lead">Свяжитесь с нами любым удобным способом</p>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <!-- КОНТАКТНАЯ ФОРМА -->
+      <div class="contact-form-section reveal">
+        <div class="section-header">
+          <h2 class="section-title">Напишите нам</h2>
+          <p class="section-description">Мы ответим в течение одного рабочего дня</p>
+        </div>
+        
+        <form class="apple-form" method="POST" action="{{ url_for('contact') }}" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="name" class="form-label">Ваше имя</label>
+            <input class="apple-input" type="text" id="name" name="name" placeholder="Иван Иванов" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input class="apple-input" type="email" id="email" name="email" placeholder="example@mail.ru" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="message" class="form-label">Сообщение</label>
+            <textarea class="apple-textarea" id="message" name="message" placeholder="Расскажите о вашем проекте или задайте вопрос" required></textarea>
+          </div>
+          
+          <!-- Drag & drop зона в стиле Apple -->
+          <div class="form-group">
+            <label class="form-label">Прикрепленные файлы</label>
+            <div id="drop" class="apple-dropzone" aria-label="Прикрепить файлы">
+              <input id="files" class="file-input" type="file" name="attachments" multiple
+                     accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.zip,.rar,.7z,.txt">
+              <div class="drop-inner">
+                <div class="drop-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M10 9H9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <p class="drop-title">Перетащите файлы сюда</p>
+                <p class="drop-subtitle">или нажмите для выбора</p>
+                <p class="drop-note">PDF, изображения, документы, архивы. До 20 МБ суммарно.</p>
+              </div>
+            </div>
+            <ul id="fileList" class="apple-file-list" aria-live="polite"></ul>
+          </div>
+          
+          <button type="submit" class="apple-button">Отправить сообщение</button>
+        </form>
+      </div>
+      
+      <!-- КОНТАКТНАЯ ИНФОРМАЦИЯ -->
+      <div class="contact-info-section reveal">
+        <div class="section-header">
+          <h2 class="section-title">Контакты</h2>
+          <p class="section-description">Свяжитесь с нами удобным для вас способом</p>
+        </div>
+        
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="contact-details">
+              <h3 class="contact-label">Адрес</h3>
+              <p class="contact-value">630099 г. Новосибирск, ул. Депутатская, 2</p>
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 16.92V19.92C22.0005 20.1985 21.9181 20.4713 21.7628 20.7051C21.6075 20.9389 21.3862 21.1235 21.126 21.2362C20.8658 21.3489 20.5783 21.3851 20.298 21.3406C20.0178 21.2961 19.7569 21.1728 19.546 20.986L17.226 18.866C14.7625 20.3233 11.7846 20.5318 9.15601 19.432C6.52742 18.3322 4.49569 16.0315 3.57601 13.186C2.65633 10.3405 2.94289 7.23331 4.35701 4.62601C5.77112 2.01871 8.18359 0.156069 11.026 0.00601146C13.8684 -0.144046 16.8634 1.32873 18.546 3.72601L20.966 1.97601C21.1792 1.7882 21.4428 1.66395 21.7256 1.61863C22.0084 1.57331 22.2986 1.6088 22.5612 1.72078C22.8238 1.83276 23.0481 2.01646 23.2077 2.24984C23.3673 2.48322 23.4554 2.75644 23.461 3.03601V6.03601C23.4613 6.48922 23.2807 6.92393 22.9608 7.24383C22.6409 7.56373 22.2062 7.74435 21.753 7.74401H18.753C18.4729 7.73839 18.1997 7.65032 17.9663 7.49072C17.7329 7.33112 17.5492 7.10677 17.4372 6.84417C17.3253 6.58157 17.2898 6.29138 17.3351 6.00859C17.3804 5.7258 17.5047 5.46216 17.693 5.25101L19.243 3.54601C18.0819 2.13981 16.4617 1.20668 14.678 0.916011C12.8943 0.625345 11.0676 0.996275 9.52601 1.96101C7.98441 2.92575 6.83315 4.42232 6.28501 6.17601C5.73687 7.92971 5.82887 9.81904 6.54201 11.509C7.25515 13.199 8.54116 14.5745 10.156 15.384C11.7708 16.1935 13.6033 16.3825 15.336 15.918L17.556 18.006C17.3462 18.1928 17.223 18.4536 17.1786 18.7338C17.1342 19.014 17.1704 19.3015 17.2831 19.5617C17.3958 19.8219 17.5804 20.0432 17.8142 20.1985C18.048 20.3538 18.3208 20.4362 18.599 20.436H21.599C21.8786 20.4304 22.1518 20.3423 22.3842 20.1827C22.6166 20.0231 22.7973 19.7988 22.9053 19.5362C23.0133 19.2736 23.0438 18.9834 22.993 18.7006C22.9422 18.4178 22.8123 18.1542 22.619 17.941L20.999 16.186C21.4243 15.8734 21.8128 15.5132 22.157 15.112C22.4643 15.4793 22.7178 15.8899 22.91 16.331C22.9686 16.4713 22.9994 16.6218 23 16.774L22.999 16.92H22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="contact-details">
+              <h3 class="contact-label">Телефон</h3>
+              <p class="contact-value">+7 (383) 383-24-24</p>
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="contact-details">
+              <h3 class="contact-label">Email</h3>
+              <p class="contact-value">info@novoneftehim.ru</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- TELEGRAM CTA -->
+        <div class="telegram-cta">
+          <div class="telegram-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 5L2 12.5L9 13.5M21 5L15 21L9 13.5M21 5L9 13.5M9 13.5V19L12.5 15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="telegram-content">
+            <h3 class="telegram-title">Написать в Telegram</h3>
+            <p class="telegram-description">Мы онлайн и отвечаем быстро</p>
+            <a href="https://t.me/tychinskiybogdan" target="_blank" class="apple-button telegram-button">
+              <span>Открыть Telegram</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block body_end %}
+<style>
+  /* Общие стили секций */
+  .section {
+    padding: 80px 0;
+  }
+  
+  .section-header {
+    margin-bottom: 40px;
+    text-align: left;
+  }
+  
+  .section-title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #8B7355;
+  }
+  
+  .section-description {
+    font-size: 17px;
+    line-height: 1.47059;
+    color: #86868b;
+    max-width: 500px;
+  }
+  
+  /* Сетка контактов */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  
+  /* Форма в стиле Apple */
+  .apple-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-label {
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #8B7355;
+  }
+  
+  .apple-input, .apple-textarea {
+    padding: 12px 16px;
+    border: 1px solid #d2d2d7;
+    border-radius: 12px;
+    font-size: 17px;
+    transition: all 0.2s ease;
+    background: #fff;
+  }
+  
+  .apple-input:focus, .apple-textarea:focus {
+    outline: none;
+    border-color: #8B7355;
+    box-shadow: 0 0 0 4px #8B7355;
+  }
+  
+  .apple-textarea {
+    min-height: 120px;
+    resize: vertical;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  
+  /* Кнопка в стиле Apple */
+  .apple-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #8B7355;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+  
+  .apple-button:hover {
+    background: #8B7355;
+    transform: translateY(-1px);
+  }
+  
+  /* Dropzone в стиле Apple */
+  .apple-dropzone {
+    position: relative;
+    border: 2px dashed #d2d2d7;
+    border-radius: 12px;
+    padding: 32px 24px;
+    background: #fbfbfd;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .apple-dropzone.focus {
+    border-color: #8B7355;
+    background: #8B7355;;
+  }
+  
+  .file-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .drop-inner {
+    pointer-events: none;
+    text-align: center;
+  }
+  
+  .drop-icon {
+    margin-bottom: 16px;
+    color: #8B7355;
+  }
+  
+  .drop-title {
+    margin: 0 0 4px;
+    font-weight: 600;
+    font-size: 17px;
+    color: #ffffff;
+  }
+  
+  .drop-subtitle {
+    margin: 0 0 8px;
+    font-size: 15px;
+    color: #86868b;
+  }
+  
+  .drop-note {
+    margin: 0;
+    font-size: 13px;
+    color: #86868b;
+  }
+  
+  /* Список файлов */
+  .apple-file-list {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .apple-file-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #fbfbfd;
+    border: 1px solid #e8e8ed;
+    border-radius: 8px;
+    font-size: 15px;
+  }
+  
+  .apple-file-list small {
+    color: #86868b;
+    font-size: 13px;
+  }
+  
+  /* Контактная информация */
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+  
+  .contact-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .contact-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #f5f5f7;
+    border-radius: 50%;
+    color: #8B7355;
+    flex-shrink: 0;
+  }
+  
+  .contact-details {
+    flex: 1;
+  }
+  
+  .contact-label {
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #8B7355;
+  }
+  
+  .contact-value {
+    font-size: 17px;
+    color: #515154;
+    margin: 0;
+  }
+  
+  /* Telegram CTA */
+  .telegram-cta {
+    display: flex;
+    gap: 16px;
+    padding: 24px;
+    background: #f5f5f7;
+    border-radius: 16px;
+  }
+  
+  .telegram-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: #8B7355;
+    border-radius: 50%;
+    color: white;
+    flex-shrink: 0;
+  }
+  
+  .telegram-content {
+    flex: 1;
+  }
+  
+  .telegram-title {
+    font-size: 19px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #8B7355;
+  }
+
+  .telegram-description {
+    font-size: 15px;
+    color: #515154;
+    margin-bottom: 16px;
+  }
+  
+  .telegram-button {
+    align-self: flex-start;
+    background: #8B7355;
+  }
+  
+  .telegram-button:hover {
+    background: #8B7355;
+  }
+  
+  /* Анимации появления */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+  }
+  
+  .reveal.reveal-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Адаптивность */
+  @media (max-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 60px;
+    }
+    
+    .section {
+      padding: 60px 0;
+    }
+    
+    .telegram-cta {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .telegram-icon {
+      align-self: center;
+    }
+  }
+</style>
+
+<script>
+(() => {
+  const dz = document.getElementById('drop');
+  const input = document.getElementById('files');
+  const list = document.getElementById('fileList');
+  const MAX_TOTAL = 20 * 1024 * 1024; // 20MB
+  const MAX_FILE  = 15 * 1024 * 1024; // 15MB
+
+  function fmtSize(b){ 
+    if(b < 1024) return b + ' B'; 
+    const kb = b / 1024; 
+    if(kb < 1024) return kb.toFixed(1) + ' KB'; 
+    return (kb / 1024).toFixed(1) + ' MB'; 
+  }
+
+  function render(files){
+    list.innerHTML = '';
+    let total = 0;
+    [...files].forEach(f => { total += f.size; });
+    
+    if (total > MAX_TOTAL) {
+      alert('Суммарный размер файлов превышает 20 МБ. Удалите лишнее.');
+      input.value = '';
+      return;
+    }
+    
+    [...files].forEach(f => {
+      if (f.size > MAX_FILE) {
+        alert(`Файл "${f.name}" больше 15 МБ и не будет отправлен.`);
+      }
+    });
+    
+    [...files].forEach(f => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${f.name}</span><small>${fmtSize(f.size)}</small>`;
+      list.appendChild(li);
+    });
+  }
+
+  input.addEventListener('change', e => render(e.target.files));
+
+  dz.addEventListener('dragenter', () => dz.classList.add('focus'));
+  dz.addEventListener('dragleave', () => dz.classList.remove('focus'));
+  dz.addEventListener('drop', () => dz.classList.remove('focus'));
+})();
+
+// Scroll reveal анимация
+(() => {
+  const els = [...document.querySelectorAll('.reveal')];
+  if(!els.length) return;
+  
+  const io = new IntersectionObserver(es => {
+    es.forEach(en => {
+      if(en.isIntersecting) {
+        en.target.classList.add('reveal-in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.18 });
+  
+  els.forEach(el => io.observe(el));
+})();
+</script>
+{% endblock %}

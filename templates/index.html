@@ -1,0 +1,901 @@
+{% extends "base.html" %}
+{% block title %}НОВОНЕФТЕХИМ — Главная{% endblock %}
+
+{% block head_extra %}
+<style>
+:root {
+  --apple-bg: #ffffff;
+  --apple-bg-alt: #f5f5f7;
+  --apple-text: #1d1d1f;
+  --apple-text-muted: #86868b;
+  --apple-border: #d2d2d7;
+  --apple-accent: #8B7355; /* Изменен на бежевый/коричневый */
+  --apple-radius: 12px;
+  --apple-radius-lg: 20px;
+  --apple-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --apple-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --apple-transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --apple-bg: #1d1d1f;
+    --apple-bg-alt: #2d2d2f;
+    --apple-text: #f5f5f7;
+    --apple-text-muted: #86868b;
+    --apple-border: #424245;
+    --apple-accent: #A08666; /* Темнее для темной темы */
+  }
+}
+
+body {
+  background: var(--apple-bg);
+  color: var(--apple-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.4;
+}
+
+/* ===== HERO SLIDER ===== */
+.hero-slider {
+  position: relative;
+  padding: 60px 0 40px;
+  background: linear-gradient(135deg, var(--apple-bg-alt) 0%, var(--apple-bg) 100%);
+}
+
+.hs-viewport {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: var(--apple-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--apple-shadow);
+}
+
+.hs-track {
+  display: flex;
+  transition: var(--apple-transition);
+}
+
+.hs-slide {
+  position: relative;
+  min-width: 100%;
+  aspect-ratio: 16/7;
+  background: var(--apple-text);
+}
+
+.hs-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+}
+
+.hs-inner {
+  position: absolute;
+  bottom: 80px; /* Переместили текст ниже */
+  left: 60px;
+  max-width: 500px;
+  color: white; /* Белый текст */
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Тень для лучшей читаемости */
+}
+
+.hs-inner h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  color: white; /* Явно белый цвет */
+}
+
+.hs-inner .lead {
+  font-size: 20px;
+  margin: 0 0 32px;
+  opacity: 0.95;
+  color: white; /* Явно белый цвет */
+}
+
+.btn-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Controls */
+.hs-controls {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+
+.hs-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--apple-transition);
+  font-size: 20px;
+}
+
+.hs-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+/* Dots */
+
+
+/* ===== FEATURES ===== */
+.features-section {
+  padding: 80px 0;
+  background: var(--apple-bg);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: var(--apple-bg);
+  border: 1px solid var(--apple-border);
+  border-radius: var(--apple-radius-lg);
+  padding: 32px;
+  text-align: center;
+  transition: var(--apple-transition);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--apple-shadow-hover);
+  border-color: var(--apple-accent);
+}
+
+.feature-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  background: var(--apple-bg-alt); /* Изменен на светло-серый */
+  border-radius: var(--apple-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--apple-accent); /* Цвет иконки */
+  font-size: 28px;
+}
+
+.feature-card h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: var(--apple-text);
+}
+
+.feature-card p {
+  color: var(--apple-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ===== KPI ===== */
+.kpi-section {
+  padding: 60px 0; /* Уменьшена высота */
+  background: var(--apple-bg-alt);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Шире блоки */
+  gap: 20px; /* Меньше отступы */
+  max-width: 900px; /* Шире контейнер */
+  margin: 0 auto;
+}
+
+.kpi-card {
+  text-align: center;
+  padding: 20px 24px; /* Меньше высота */
+  background: var(--apple-bg);
+  border-radius: var(--apple-radius-lg);
+  border: 1px solid var(--apple-border);
+  min-height: 120px; /* Фиксированная высота */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.kpi-num {
+  font-size: 42px; /* Немного меньше */
+  font-weight: 700;
+  color: var(--apple-accent);
+  margin: 0 0 8px;
+  letter-spacing: -1px;
+}
+
+.kpi-txt {
+  color: var(--apple-text-muted);
+  margin: 0;
+  font-size: 16px;
+}
+
+/* ===== CLIENTS ===== */
+.clients-section {
+  padding: 80px 0;
+  background: var(--apple-bg);
+}
+
+.marquee {
+  overflow: hidden;
+  position: relative;
+  padding: 40px 0;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 48px;
+  animation: marquee 30s linear infinite;
+}
+
+.logo-pill {
+  padding: 16px 24px;
+  border: 1px solid var(--apple-border);
+  border-radius: 100px;
+  font-weight: 600;
+  color: var(--apple-text);
+  white-space: nowrap;
+  transition: var(--apple-transition);
+}
+
+.logo-pill:hover {
+  border-color: var(--apple-accent);
+  color: var(--apple-accent);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ===== REVIEWS ===== */
+/* ===== REVIEWS ===== */
+.reviews-section {
+  padding: 80px 0;
+  background-color: #f8f9fa;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.reviews-carousel {
+  width: 100%;
+}
+
+.reviews-track {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+}
+
+.review-card {
+  flex: 1;
+  min-width: 300px;
+  max-width: 350px;
+  background: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  height: 320px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.quote {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 30px;
+  flex-grow: 1;
+  font-style: italic;
+  position: relative;
+}
+
+.quote::before {
+  content: '"';
+  font-size: 3rem;
+  color: #8B7355;
+  position: absolute;
+  top: -15px;
+  left: -10px;
+  opacity: 0.3;
+  font-family: serif;
+}
+
+.reviewer {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: auto;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #F5F5F7;
+}
+
+.reviewer-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.reviewer-info strong {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.reviewer-info span {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* Адаптивность для планшетов */
+@media (max-width: 1024px) {
+  .review-card {
+    height: 350px;
+    min-width: 280px;
+  }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .reviews-track {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .review-card {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    min-height: 250px;
+  }
+  
+  .section-header h2 {
+    font-size: 2rem;
+  }
+}
+
+
+/* ===== CTA ===== */
+.cta-section {
+  padding: 80px 0;
+  background: var(--apple-bg);
+  text-align: center;
+}
+
+.cta-card {
+  max-width: 600px;
+  margin: 0 auto;
+  background: var(--apple-bg);
+  border: 1px solid var(--apple-border);
+  border-radius: var(--apple-radius-lg);
+  padding: 48px 32px;
+}
+
+.cta-card h2 {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: var(--apple-text);
+}
+
+.cta-card p {
+  font-size: 18px;
+  color: var(--apple-text-muted);
+  margin: 0 0 32px;
+  line-height: 1.5;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 980px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--apple-transition);
+  border: 2px solid transparent;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--apple-accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: transparent;
+  border-color: var(--apple-accent);
+  color: var(--apple-accent);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 2px solid var(--apple-border);
+  color: var(--apple-text);
+}
+
+.btn-ghost:hover {
+  border-color: var(--apple-accent);
+  color: var(--apple-accent);
+  transform: translateY(-1px);
+}
+
+/* Section headers */
+.section-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.section-header h2 {
+  font-size: 40px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--apple-text);
+  letter-spacing: -0.5px;
+}
+
+.section-subtitle {
+  font-size: 20px;
+  color: var(--apple-text-muted);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hs-inner {
+    left: 24px;
+    right: 24px;
+    text-align: center;
+    bottom: 60px;
+  }
+  
+  .hs-inner h1 {
+    font-size: 32px;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .kpi-card {
+    min-height: 100px;
+    padding: 16px 20px;
+  }
+  
+  .kpi-num {
+    font-size: 36px;
+  }
+  
+
+  
+  .quote {
+    font-size: 16px;
+    padding-left: 25px;
+  }
+  
+  .quote::before {
+    font-size: 50px;
+    left: -5px;
+  }
+  
+  .reviewer {
+    padding-left: 25px;
+  }
+  
+  .btn-row {
+    justify-content: center;
+  }
+  
+  .section-header h2 {
+    font-size: 32px;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Slider -->
+<section class="hero-slider">
+  <div class="hs-viewport">
+    <div class="hs-track">
+      <article class="hs-slide">
+        <img src="{{ url_for('static', filename='images/hero/slide1.png') }}" alt="Инженерные решения для производства">
+        <div class="hs-inner">
+          <h1>Инженерные решения для непрерывного производства</h1>
+          <p class="lead">Проектирование, поставка, сервис</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="{{ url_for('contact') }}">Связаться</a>
+            <a class="btn btn-primary" href="{{ url_for('products') }}">Каталог</a> <!-- Одинаковый цвет -->
+          </div>
+        </div>
+      </article>
+
+      <article class="hs-slide">
+        <img src="{{ url_for('static', filename='images/hero/slide2.jpeg') }}" alt="Автоматизация и телеметрия">
+        <div class="hs-inner">
+          <h1>Автоматизация и телеметрия</h1>
+          <p class="lead">Стабильные процессы и предсказуемый выпуск</p>
+        </div>
+      </article>
+
+      <article class="hs-slide">
+        <img src="{{ url_for('static', filename='images/hero/slide3.jpeg') }}" alt="Модульные решения">
+        <div class="hs-inner">
+          <h1>Модульные решения</h1>
+          <p class="lead">От пилота до промышленной эксплуатации</p>
+        </div>
+      </article>
+
+      <article class="hs-slide">
+        <img src="{{ url_for('static', filename='images/hero/slide4.jpeg') }}" alt="Сервис 24/7">
+        <div class="hs-inner">
+          <h1>Сервис 24/7</h1>
+          <p class="lead">Запчасти, регламенты, гарантийная поддержка</p>
+        </div>
+      </article>
+    </div>
+
+</section>
+
+<!-- Features -->
+<section class="features-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Наши преимущества</h2>
+      <p class="section-subtitle">Комплексный подход к решению производственных задач</p>
+    </div>
+    
+    <div class="features-grid">
+      <article class="feature-card">
+        <div class="feature-icon">📐</div>
+        <h3>Техническое проектирование</h3>
+        <p>Точные расчёты и индивидуальные решения для ваших задач</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon">🏭</div>
+        <h3>Производство под ключ</h3>
+        <p>Полный цикл от разработки до серийного выпуска</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3>Международные поставки</h3>
+        <p>Логистика, таможня и сертификация оборудования</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- KPI -->
+<section class="kpi-section">
+  <div class="container">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-num counter" data-target="12">12+</div>
+        <p class="kpi-txt">лет на рынке</p>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-num counter" data-target="500">500+</div>
+        <p class="kpi-txt">успешных проектов</p>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-num">24/7</div>
+        <p class="kpi-txt">техническая поддержка</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Clients -->
+<section class="clients-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Наши клиенты</h2>
+      <p class="section-subtitle">Сотрудничаем с ведущими компаниями России</p>
+    </div>
+    
+    <div class="marquee">
+      <div class="marquee-track">
+        <span class="logo-pill">Роснефть</span>
+        <span class="logo-pill">Газпромнефть</span>
+        <span class="logo-pill">Сибур</span>
+        <span class="logo-pill">Евраз</span>
+        <span class="logo-pill">ТАНЕКО</span>
+        <span class="logo-pill">ЛУКОЙЛ</span>
+        <span class="logo-pill">Роснефть</span>
+        <span class="logo-pill">Газпромнефть</span>
+        <span class="logo-pill">Сибур</span>
+        <span class="logo-pill">Евраз</span>
+        <span class="logo-pill">ТАНЕКО</span>
+        <span class="logo-pill">ЛУКОЙЛ</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Reviews -->
+<!-- Reviews -->
+<section class="reviews-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Отзывы клиентов</h2>
+      <p class="section-subtitle">Мнение наших партнёров — лучшая оценка качества</p>
+    </div>
+
+    <div class="reviews-carousel">
+      <div class="reviews-track">
+        <div class="review-card">
+          <p class="quote">Поставка МТР выполнена в срок согласно договорным обязательствам, к поставленным материалам нет замечаний по качеству и количеству. Отличная работа команды специалистов.</p>
+          <div class="reviewer">
+            <img class="avatar" src="https://dummyimage.com/64x64/F5F5F7/8B7355&text=SB" alt="Станислав Б.">
+            <div class="reviewer-info">
+              <strong>Станислав Б.</strong>
+              <span>Руководитель проекта</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="review-card">
+          <p class="quote">Качественное оборудование и профессиональный подход к реализации проекта. Рекомендуем как надежного поставщика для сложных технических решений.</p>
+          <div class="reviewer">
+            <img class="avatar" src="https://dummyimage.com/64x64/F5F5F7/8B7355&text=AK" alt="Алексей К.">
+            <div class="reviewer-info">
+              <strong>Алексей К.</strong>
+              <span>Технический директор</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="review-card">
+          <p class="quote">Оперативная техническая поддержка и грамотные консультации специалистов помогли решить сложные производственные задачи в кратчайшие сроки.</p>
+          <div class="reviewer">
+            <img class="avatar" src="https://dummyimage.com/64x64/F5F5F7/8B7355&text=МП" alt="Мария П.">
+            <div class="reviewer-info">
+              <strong>Мария П.</strong>
+              <span>Инженер-технолог</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-card">
+      <h2>Есть ТЗ или спецификация?</h2>
+      <p>Отправьте нам- подберем варианты: импорт или изготовление, посчитаем сроки и стоимость.</p>
+      <a class="btn btn-primary" href="{{ url_for('contact') }}">Отправить запрос</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block body_end %}
+<script>
+// Hero Slider
+(function(){
+  const slider = document.querySelector('.hero-slider');
+  const track = slider.querySelector('.hs-track');
+  const slides = slider.querySelectorAll('.hs-slide');
+  const prev = slider.querySelector('.prev');
+  const next = slider.querySelector('.next');
+  const dots = slider.querySelectorAll('.dot');
+  
+  let currentIndex = 0;
+  const intervalTime = 3000; // 3 секунды
+  let autoSlide;
+
+  function updateSlider() {
+    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentIndex);
+    });
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % slides.length;
+    updateSlider();
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    updateSlider();
+  }
+
+  function startAutoSlide() {
+    autoSlide = setInterval(nextSlide, intervalTime);
+  }
+
+  function stopAutoSlide() {
+    clearInterval(autoSlide);
+  }
+
+  // Event listeners
+  next.addEventListener('click', () => {
+    stopAutoSlide();
+    nextSlide();
+    startAutoSlide();
+  });
+
+  prev.addEventListener('click', () => {
+    stopAutoSlide();
+    prevSlide();
+    startAutoSlide();
+  });
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      stopAutoSlide();
+      currentIndex = index;
+      updateSlider();
+      startAutoSlide();
+    });
+  });
+
+  // Auto slide and hover control
+  slider.addEventListener('mouseenter', stopAutoSlide);
+  slider.addEventListener('mouseleave', startAutoSlide);
+
+  // Start auto slide
+  startAutoSlide();
+})();
+
+// Reviews Carousel
+// Reviews Carousel
+(function(){
+  const carousel = document.querySelector('.reviews-carousel');
+  const track = carousel.querySelector('.reviews-track');
+  const reviews = carousel.querySelectorAll('.review-card');
+  const dots = carousel.querySelectorAll('.review-dot');
+  
+  let currentReview = 0;
+  const reviewInterval = 4000;
+  let autoReview;
+
+  function updateReviews() {
+    track.style.transform = `translateX(-${currentReview * 100}%)`;
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentReview);
+    });
+  }
+
+  function nextReview() {
+    currentReview = (currentReview + 1) % reviews.length;
+    updateReviews();
+  }
+
+  function startAutoReview() {
+    autoReview = setInterval(nextReview, reviewInterval);
+  }
+
+  function stopAutoReview() {
+    clearInterval(autoReview);
+  }
+
+  // Dot click events
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      stopAutoReview();
+      currentReview = index;
+      updateReviews();
+      startAutoReview();
+    });
+  });
+
+  // Auto review and hover control
+
+
+  // Start auto review
+  startAutoReview();
+})();
+
+// Counter animation
+(function(){
+  const counters = document.querySelectorAll('.counter');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const counter = entry.target;
+        const target = parseInt(counter.dataset.target);
+        const duration = 2000;
+        const step = target / (duration / 16);
+        let current = 0;
+
+        const updateCounter = () => {
+          current += step;
+          if (current < target) {
+            counter.textContent = Math.floor(current) + '+';
+            requestAnimationFrame(updateCounter);
+          } else {
+            counter.textContent = target + '+';
+          }
+        };
+
+        updateCounter();
+        observer.unobserve(counter);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(counter => {
+    observer.observe(counter);
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+{% block title %}FAQ — НОВОНЕФТЕХИМ{% endblock %}
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero" style="--hero-bg:url('{{ url_for('static', filename='images/faq-hero.jpg') }}')">
+  <div class="hero-content reveal">
+    <h1 class="hero-title">Часто задаваемые вопросы</h1>
+    <p class="hero-lead">Коротко и по делу</p>
+  </div>
+</section>
+
+<!-- FAQ SECTION -->
+<section class="section">
+  <div class="container">
+    <div class="section-header center reveal">
+      <h2 class="section-title">Ответы на популярные вопросы</h2>
+      <p class="section-description">Всё, что вам нужно знать о сотрудничестве с нами</p>
+    </div>
+
+    <div class="apple-accordion">
+      <details class="apple-acc-item reveal">
+        <summary class="apple-acc-summary">
+          <span class="acc-question">Какие услуги вы предоставляете?</span>
+          <div class="acc-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </summary>
+        <div class="apple-acc-content">
+          <p>Мы поставляем промышленное оборудование, проектируем решения и обеспечиваем сервисное сопровождение.</p>
+        </div>
+      </details>
+      
+      <details class="apple-acc-item reveal">
+        <summary class="apple-acc-summary">
+          <span class="acc-question">В каких отраслях работаете?</span>
+          <div class="acc-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </summary>
+        <div class="apple-acc-content">
+          <p>Нефтехимия, энергетика, металлургия, водоподготовка и смежные промышленные отрасли.</p>
+        </div>
+      </details>
+      
+      <details class="apple-acc-item reveal">
+        <summary class="apple-acc-summary">
+          <span class="acc-question">Можно ли заказать оборудование под индивидуальное ТЗ?</span>
+          <div class="acc-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </summary>
+        <div class="apple-acc-content">
+          <p>Да, разрабатываем и подбираем решения под ваши требования.</p>
+        </div>
+      </details>
+      
+      <details class="apple-acc-item reveal">
+        <summary class="apple-acc-summary">
+          <span class="acc-question">Где изготавливается оборудование?</span>
+          <div class="acc-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </summary>
+        <div class="apple-acc-content">
+          <p>Мы работаем как с российскими, так и с зарубежными производителями, также имеем собственное производство.</p>
+        </div>
+      </details>
+      
+      <details class="apple-acc-item reveal">
+        <summary class="apple-acc-summary">
+          <span class="acc-question">Можно ли организовать выезд специалиста на объект?</span>
+          <div class="acc-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </summary>
+        <div class="apple-acc-content">
+          <p>Да, по согласованию выезжаем для обследования и пусконаладки.</p>
+        </div>
+      </details>
+      
+      <details class="apple-acc-item reveal">
+        <summary class="apple-acc-summary">
+          <span class="acc-question">Как связаться с менеджером?</span>
+          <div class="acc-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </summary>
+        <div class="apple-acc-content">
+          <p>Через форму на сайте, по телефону или электронной почте, указанным в разделе «Контакты».</p>
+        </div>
+      </details>
+    </div>
+    
+    <!-- CTA SECTION -->
+    <div class="faq-cta reveal">
+      <div class="cta-content">
+        <h3>Не нашли ответ на свой вопрос?</h3>
+        <p>Свяжитесь с нами напрямую, и мы подробно ответим на все ваши вопросы</p>
+        <a href="{{ url_for('contact') }}" class="apple-button">Связаться с нами</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block body_end %}
+<style>
+  /* Общие стили секций */
+  .section {
+    padding: 80px 0;
+  }
+  
+  .section-header {
+    margin-bottom: 60px;
+    text-align: center;
+  }
+  
+  .section-title {
+    font-size: 40px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #1d1d1f;
+    letter-spacing: -0.5px;
+  }
+  
+  .section-description {
+    font-size: 21px;
+    line-height: 1.381;
+    color: #86868b;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .center {
+    text-align: center;
+  }
+  
+  /* Аккордеон в стиле Apple */
+  .apple-accordion {
+    max-width: 800px;
+    margin: 0 auto 80px;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+  
+  .apple-acc-item {
+    border-bottom: 1px solid #f5f5f7;
+    background: #fff;
+    transition: all 0.3s ease;
+  }
+  
+  .apple-acc-item:last-child {
+    border-bottom: none;
+  }
+  
+  .apple-acc-item[open] {
+    background: #fbfbfd;
+  }
+  
+  .apple-acc-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    cursor: pointer;
+    list-style: none;
+    transition: all 0.3s ease;
+  }
+  
+  .apple-acc-summary:hover {
+    background: #fbfbfd;
+  }
+  
+  .apple-acc-summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  .acc-question {
+    font-size: 19px;
+    font-weight: 500;
+    color: #1d1d1f;
+    line-height: 1.421;
+    flex: 1;
+    padding-right: 20px;
+  }
+  
+  .acc-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: #86868b;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  
+  .apple-acc-item[open] .acc-icon {
+    transform: rotate(180deg);
+    color: #007AFF;
+  }
+  
+  .apple-acc-content {
+    padding: 0 32px 24px;
+  }
+  
+  .apple-acc-content p {
+    font-size: 17px;
+    line-height: 1.47059;
+    color: #515154;
+    margin: 0;
+  }
+  
+  /* CTA секция */
+  .faq-cta {
+    background: linear-gradient(135deg, #f5f5f7 0%, #fbfbfd 100%);
+    border-radius: 20px;
+    padding: 60px 40px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .cta-content h3 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1d1d1f;
+  }
+  
+  .cta-content p {
+    font-size: 17px;
+    line-height: 1.47059;
+    color: #86868b;
+    margin-bottom: 32px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Кнопка в стиле Apple */
+  .apple-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: #8B7355;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+  
+  .apple-button:hover {
+    background: #8B7355;
+    transform: translateY(-1px);
+  }
+  
+  /* Анимации появления */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+  }
+  
+  .reveal.reveal-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Плавное открытие аккордеона */
+  .apple-acc-content {
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Адаптивность */
+  @media (max-width: 768px) {
+    .section {
+      padding: 60px 0;
+    }
+    
+    .section-title {
+      font-size: 32px;
+    }
+    
+    .section-description {
+      font-size: 19px;
+    }
+    
+    .apple-accordion {
+      border-radius: 14px;
+      margin-bottom: 60px;
+    }
+    
+    .apple-acc-summary {
+      padding: 20px 24px;
+    }
+    
+    .acc-question {
+      font-size: 17px;
+    }
+    
+    .apple-acc-content {
+      padding: 0 24px 20px;
+    }
+    
+    .faq-cta {
+      padding: 40px 24px;
+      border-radius: 16px;
+    }
+    
+    .cta-content h3 {
+      font-size: 24px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .apple-acc-summary {
+      padding: 16px 20px;
+    }
+    
+    .apple-acc-content {
+      padding: 0 20px 16px;
+    }
+    
+    .acc-question {
+      font-size: 16px;
+    }
+  }
+</style>
+
+<script>
+// Scroll reveal анимация
+(() => {
+  const els = [...document.querySelectorAll('.reveal')];
+  if(!els.length) return;
+  
+  const io = new IntersectionObserver(es => {
+    es.forEach(en => {
+      if(en.isIntersecting) {
+        en.target.classList.add('reveal-in');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.18 });
+  
+  els.forEach(el => io.observe(el));
+})();
+
+// Плавная анимация аккордеона
+document.querySelectorAll('.apple-acc-item').forEach(item => {
+  item.addEventListener('toggle', function() {
+    if (this.open) {
+      // Добавляем небольшую задержку для плавности
+      setTimeout(() => {
+        this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+  });
+});
+</script>
+{% endblock %}

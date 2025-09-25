@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="НОВОНЕФТЕХИМ — оптовая торговля промышленным оборудованием">
+<meta name="keywords" content="НОВОНЕФТЕХИМ, оборудование, нефтехимия, промышленность">
+<meta property="og:title" content="НОВОНЕФТЕХИМ">
+<meta property="og:description" content="Ваш надёжный партнёр в поставке промышленного оборудования">
+<meta name="theme-color" content="#ffffff">
+<title>{% block title %}НОВОНЕФТЕХИМ{% endblock %}</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('theme');
+    if(t){ document.documentElement.setAttribute('data-theme', t); }
+  }catch(e){}
+})();
+</script>
+
+<style>
+  .logo-img{ height:36px; width:auto; display:block; }
+  @media (max-width: 640px){ .logo-img{ height:40px; } }
+  .navbar.scrolled{ box-shadow: 0 6px 18px rgba(0,0,0,.06); }
+  
+</style>
+
+{% block head_extra %}{% endblock %}
+</head>
+<body>
+
+{# Макрос разделителя-волны.
+   Использование в дочерних шаблонах:
+   {% from 'base.html' import wave %}
+   {{ wave() }}
+#}
+{% macro wave(fill='rgba(10,132,255,.06)') -%}
+<div class="divider-wave" aria-hidden="true">
+  <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+    <path fill="{{ fill }}" d="M0,64 C240,128 480,0 720,48 960,96 1200,64 1440,32 L1440,120 0,120Z"/>
+  </svg>
+</div>
+{%- endmacro %}
+
+<div id="intro" class="intro" aria-hidden="true">
+  <img src="{{ url_for('static', filename='images/1757315497511ktnvvvxw.png') }}" alt="" class="intro-logo" loading="eager" decoding="async" />
+</div>
+<noscript><style>#intro{display:none!important}</style></noscript>
+
+<div id="pageFx" class="page-fx" aria-hidden="true"></div>
+<div id="glow" class="cursor-glow" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main">Перейти к содержимому</a>
+
+<nav class="navbar" role="navigation" aria-label="Главная навигация">
+  <div class="container">
+    <a href="{{ url_for('home') }}" class="logo" aria-label="На главную">
+      <img src="{{ url_for('static', filename='images/1757315497511ktnvvvxw.png') }}" alt="Логотип НОВОНЕФТЕХИМ" class="logo-img" loading="eager" decoding="async">
+    </a>
+
+    <button class="nav-toggle" aria-label="Открыть меню" aria-expanded="false">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
+   
+
+
+    <div class="nav-links" id="nav-links">
+      
+      <a href="{{ url_for('home') }}" {% if request.endpoint == 'home' %}aria-current="page"{% endif %}>Главная</a>
+      <a href="{{ url_for('about') }}" {% if request.endpoint == 'about' %}aria-current="page"{% endif %}>О компании</a>
+      <a href="{{ url_for('products') }}" {% if request.endpoint == 'products' %}aria-current="page"{% endif %}>Продукты</a>
+      <a href="{{ url_for('clients') }}" {% if request.endpoint == 'clients' %}aria-current="page"{% endif %}>Партнеры</a>
+      <a href="{{ url_for('news') }}" {% if request.endpoint == 'news' %}aria-current="page"{% endif %}>Новости</a>
+      <a href="{{ url_for('contact') }}" {% if request.endpoint == 'contact' %}aria-current="page"{% endif %}>Контакты</a>
+      <a href="{{ url_for('faq') }}" {% if request.endpoint == 'faq' %}aria-current="page"{% endif %}>FAQ</a>
+      <a href="{{ url_for('vacancies') }}">Вакансии</a>
+      <a href="{{ url_for('admin_login') }}" target="_blank" class="focus-visible">Сотрудникам</a>
+      <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+    </div>
+  </div>
+</nav>
+
+<div id="scrollbar" class="scrollbar" aria-hidden="true"></div>
+
+<main id="main">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <p>&copy; 2025 НОВОНЕФТЕХИМ. Все права защищены.</p>
+  </div>
+</footer>
+
+<script>
+  const navbar = document.querySelector('.navbar');
+  document.addEventListener('scroll', () => {
+    if (window.scrollY > 10) { navbar.classList.add('scrolled'); }
+    else { navbar.classList.remove('scrolled'); }
+  });
+
+  const toggle  = document.querySelector('.nav-toggle');
+  const links   = document.getElementById('nav-links');
+  const overlay = document.getElementById('nav-overlay');
+
+  function setMenu(opened){
+    if(!links) return;
+    links.classList.toggle('open', opened);
+    document.body.classList.toggle('menu-open', opened);
+    if (toggle) toggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
+  }
+  if (toggle && links) {
+    toggle.addEventListener('click', () => setMenu(!links.classList.contains('open')));
+  }
+  if (overlay) overlay.addEventListener('click', ()=> setMenu(false));
+</script>
+
+<script>
+(function(){
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const intro = document.getElementById('intro');
+  if (intro) {
+    const SHOW_ONCE = true;
+    const seen = sessionStorage.getItem('introSeen');
+    if (SHOW_ONCE && seen) {
+      intro.classList.add('hidden');
+    } else {
+      document.body.classList.add('intro-lock');
+      intro.classList.add('in');
+      if (reduce) {
+        hideIntro(true);
+      } else {
+        const POP = 900, ZOOM = 1100, PAUSE = 250;
+        const failsafe = setTimeout(()=>hideIntro(true), 4000);
+        const end = ()=>{ clearTimeout(failsafe); hideIntro(false); };
+        setTimeout(()=>{ intro.classList.add('out'); setTimeout(end, ZOOM); }, POP + PAUSE);
+        intro.addEventListener('click', ()=>hideIntro(true));
+        document.addEventListener('keydown', e=>{ if(e.key==='Escape') hideIntro(true); });
+      }
+    }
+    function hideIntro(force){
+      intro.classList.remove('in','out');
+      if (force) intro.style.opacity = '0';
+      requestAnimationFrame(()=>{
+        intro.classList.add('hidden');
+        document.body.classList.remove('intro-lock');
+        try{ sessionStorage.setItem('introSeen','1'); }catch(e){}
+      });
+    }
+  }
+
+  const fx = document.getElementById('pageFx');
+  if (fx && !reduce) {
+    document.addEventListener('click', (e)=>{
+      const a = e.target.closest('a[href]');
+      if (!a) return;
+      if (a.hasAttribute('download') || a.target === '_blank' || a.getAttribute('rel')?.includes('external') || a.dataset.noFx === '1') return;
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('#')) return;
+      const url = new URL(href, location.href);
+      if (url.origin !== location.origin) return;
+      e.preventDefault();
+      fx.classList.add('in');
+      setTimeout(()=>{ location.href = url.href; }, 250);
+    });
+    window.addEventListener('pageshow', ()=> fx.classList.remove('in'));
+  }
+
+  const bar = document.getElementById('scrollbar');
+  if (bar) {
+    const onScroll = ()=>{
+      const h = document.documentElement;
+      const max = Math.max(1, h.scrollHeight - h.clientHeight);
+      const p = Math.min(1, h.scrollTop / max);
+      bar.style.width = (p*100).toFixed(2) + '%';
+    };
+    document.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  }
+
+  const glow = document.getElementById('glow');
+  if (glow && !reduce) {
+    let timer;
+    document.addEventListener('mousemove', (e)=>{
+      glow.style.left = (e.clientX - 80) + 'px';
+      glow.style.top  = (e.clientY - 80) + 'px';
+      glow.style.opacity = .9;
+      clearTimeout(timer);
+      timer = setTimeout(()=> glow.style.opacity = .0, 1200);
+    }, {passive:true});
+  }
+
+  (function(){
+    const nodes = [...document.querySelectorAll('.reveal')];
+    if (!nodes.length) return;
+    if (reduce) { nodes.forEach(n=>n.classList.add('reveal-in')); return; }
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{
+        if (!en.isIntersecting) return;
+        const el = en.target;
+        const siblings = [...(el.parentElement?.children||[])].filter(c=>c.classList?.contains('reveal'));
+        const i = siblings.indexOf(el);
+        el.style.setProperty('--reveal-delay', (i*60)+'ms');
+        el.classList.add('reveal-in');
+        io.unobserve(el);
+      });
+    }, {threshold:.18});
+    nodes.forEach(n=>io.observe(n));
+  })();
+
+  (function(){
+    const heros = document.querySelectorAll('.hero:not(.hero-video)');
+    if(!heros.length || reduce) return;
+    let ticking = false;
+    function onScroll(){
+      if(ticking) return;
+      requestAnimationFrame(()=>{
+        const y = window.scrollY || 0;
+        heros.forEach(h=>{ h.style.backgroundPosition = `center calc(50% + ${y*0.06}px)`; });
+        ticking = false;
+      });
+      ticking = true;
+    }
+    document.addEventListener('scroll', onScroll, {passive:true});
+  })();
+
+  (function(){
+    if (reduce) return;
+    const btns = document.querySelectorAll('.btn');
+    btns.forEach(b=>{
+      b.addEventListener('mousemove', (e)=>{
+        const r = b.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width/2;
+        const y = e.clientY - r.top  - r.height/2;
+        b.style.transform = `translate(${x*0.04}px, ${y*0.04}px)`;
+      });
+      b.addEventListener('mouseleave', ()=>{ b.style.transform = ''; });
+    });
+  })();
+
+  (function(){
+    if (reduce) return;
+    const cards = document.querySelectorAll('.card[data-tilt], [data-tilt].card');
+    cards.forEach(card=>{
+      const maxX = 4, maxY = 6;
+      function move(e){
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left)/r.width - 0.5;
+        const y = (e.clientY - r.top)/r.height - 0.5;
+        card.style.transform = `rotateX(${(-y*maxX)}deg) rotateY(${(x*maxY)}deg) translateZ(0)`;
+      }
+      function reset(){ card.style.transform = ''; }
+      card.addEventListener('mousemove', move);
+      card.addEventListener('mouseleave', reset);
+      card.addEventListener('touchend', reset, {passive:true});
+    });
+  })();
+
+})();
+</script>
+
+<script>
+(function(){
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(c=>{
+    c.addEventListener('mousemove', (e)=>{
+      const r=c.getBoundingClientRect();
+      c.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+      c.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+    });
+  });
+})();
+
+(function(){
+  const btn=document.getElementById('themeToggle'); if(!btn) return;
+  const root=document.documentElement; const key='theme';
+  const saved=localStorage.getItem(key); if(saved) root.setAttribute('data-theme', saved);
+  btn.addEventListener('click', ()=>{
+    const cur=root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    const next=cur==='dark'?'light':'dark';
+    root.setAttribute('data-theme', next); localStorage.setItem(key,next);
+  });
+})();
+</script>
+
+{% block body_end %}{% endblock %}
+</body>
+</html>
+
+

@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+{% block title %}Продукты — НОВОНЕФТЕХИМ{% endblock %}
+
+
+{% block head_extra %}
+<style>
+/* контейнеры вкладок */
+.tab-pane-container {
+  position: relative; /* Contain absolutely positioned panes */
+  min-height: 200px; /* Prevent layout jumps; adjust based on content */
+}
+
+
+.tab-pane {
+  display: block;
+  opacity: 0;
+  transform: translateY(20px); /* Subtle slide effect */
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* Smooth easing */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none; /* Prevent interaction when hidden */
+  visibility: hidden; /* Hide from screen readers when inactive */
+}
+
+
+.tab-pane.active {
+  opacity: 1;
+  transform: translateY(0);
+  position: relative; /* Restore normal flow for active pane */
+  pointer-events: auto;
+  visibility: visible;
+}
+
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .tab-pane {
+    transition: none; /* Disable animations for accessibility */
+  }
+}
+
+
+/* Ensure smooth grid transitions */
+.steps {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  opacity: 1;
+  transition: opacity 0.2s ease-out; /* Subtle content fade */
+}
+
+
+@media (max-width: 860px) {
+  .steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Rest of your existing CSS remains unchanged */
+:root {
+  --ink: #1b1f27;
+  --muted: #667185;
+  --card: #fff;
+  --line: #e7ecf3;
+  --paper: #f7f9fc;
+  --brand: #0a49a7;
+  --brand-ink: #fff;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #eef2f7;
+    --muted: #a8b2c4;
+    --card: #121923;
+    --line: #1f2a38;
+    --paper: #0c1218;
+    --brand: #6aa6ff;
+    --brand-ink: #0c1218;
+  }
+}
+
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+
+/* заголовок секции */
+.section {
+  padding: clamp(32px, 6vw, 72px) 0;
+}
+
+
+.section-head {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+
+.section-head p {
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+
+
+/* блок "Что мы делаем" */
+.services-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 48px 0 60px;
+}
+
+
+.service-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+
+.service-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  color: white;
+}
+
+
+.service-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+
+.service-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+
+/* кнопки-вкладки */
+.tabs {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  margin: 22px auto 24px;
+  flex-wrap: wrap;
+}
+
+
+.tab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  min-width: 170px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 600;
+  transition: box-shadow 0.2s, transform 0.15s, background 0.2s, border-color 0.2s;
+  text-decoration: none;
+}
+
+
+.tab-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+
+.tab-btn.active {
+  background: #8B7355;
+  color: var(--brand-ink);
+  border-color: transparent;
+  box-shadow: 0 12px 28px rgba(139, 115, 85, 0.25);
+}
+
+
+/* увеличенный вертикальный зазор на мобилках */
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    margin: 32px 0 48px;
+  }
+  .tabs {
+    gap: 12px;
+  }
+  .tab-btn {
+    width: 100%;
+    min-width: 0;
+    padding: 14px 16px;
+  }
+}
+
+
+/* сетка этапов */
+.step {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+
+.step:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+
+.step .ic {
+  flex: 0 0 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, rgba(139, 115, 85, 0.12), rgba(139, 115, 85, 0.06));
+  font-size: 20px;
+}
+
+
+.step h3 {
+  margin: 2px 0 4px;
+  font-size: 18px;
+}
+
+
+.step p {
+  margin: 0;
+  color: var(--muted);
+}
+
+
+/* контейнер */
+.container.narrow {
+  max-width: 980px;
+}
+
+
+
+
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<section class="section">
+  <div class="container narrow">
+    <div class="section-head">
+      <h1 class="mt-0">Продукты и варианты поставки</h1>
+      <p>Выберите сценарий работы: собственное производство или импорт поставок.</p>
+    </div>
+
+
+    <!-- Блок "Что мы делаем" -->
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">⚙️</div>
+        <h3>Инжиниринг</h3>
+        <p>Подбор и расчёт под конкретные условия. Проектирование оптимальных технических решений.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🏭</div>
+        <h3>Производство</h3>
+        <p>Изготовление узлов и блоков «под ключ». Полный цикл от проектирования до сборки.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🌍</div>
+        <h3>Импорт оборудования</h3>
+        <p>Контракты, логистика, сертификация, доставка. Работа с международными поставщиками.</p>
+      </div>
+    </div>
+
+
+    <!-- Кнопки-вкладки -->
+    <div class="tabs" role="tablist" aria-label="Способ поставки">
+      <button class="tab-btn active" data-tab="production" role="tab" aria-selected="true">Производство</button>
+      <button class="tab-btn" data-tab="import" role="tab" aria-selected="false">Импорт</button>
+    </div>
+
+
+    <!-- Контейнер для вкладок -->
+    <div class="tab-pane-container">
+      <!-- Вкладка: Производство -->
+      <div id="pane-production" class="tab-pane active" role="tabpanel" aria-labelledby="production">
+        <div class="steps">
+          <article class="step">
+            <div class="ic">💬</div>
+            <div>
+              <h3>Обсуждение</h3>
+              <p>Фиксируем задачу, ограничения и критерии успеха, собираем исходные данные.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="ic">📐</div>
+            <div>
+              <h3>Проект</h3>
+              <p>Разрабатываем ТКП и проект решения с подбором узлов под ваши условия.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="ic">🔧</div>
+            <div>
+              <h3>Изготовление</h3>
+              <p>Производим блоки и узлы, проводим испытания и приёмку, готовим документацию.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="ic">🚚</div>
+            <div>
+              <h3>Поставка</h3>
+              <p>Логистика, шеф-монтаж и пусконаладка. Обучение и сопровождение эксплуатации.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+
+      <!-- Вкладка: Импорт -->
+      <div id="pane-import" class="tab-pane" role="tabpanel" aria-labelledby="import">
+        <div class="steps">
+          <article class="step">
+            <div class="ic">🔍</div>
+            <div>
+              <h3>Подбор</h3>
+              <p>Анализ потребности и подбор зарубежного оборудования/комплектующих.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="ic">📑</div>
+            <div>
+              <h3>Контракт</h3>
+              <p>Подготовка договоров, спецификаций, сертификации и гарантийных условий.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="ic">📦</div>
+            <div>
+              <h3>Логистика</h3>
+              <p>Построение маршрута, страхование, таможенное оформление и TСД.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="ic">✅</div>
+            <div>
+              <h3>Доставка</h3>
+              <p>Доставка на площадку, приёмка и ввод в эксплуатацию совместно с поставщиком.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+{% endblock %}
+
+{% block body_end %}
+<script>
+(function () {
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panes = {
+    production: document.getElementById('pane-production'),
+    import: document.getElementById('pane-import'),
+  };
+  let isSwitching = false;
+
+
+  function activate(which) {
+    if (isSwitching) return; // Prevent rapid clicks
+    isSwitching = true;
+
+
+    // Update buttons
+    tabs.forEach((b) => {
+      const on = b.dataset.tab === which;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+
+
+    // Update panes
+    Object.keys(panes).forEach((k) => {
+      panes[k].classList.toggle('active', k === which);
+    });
+
+
+    // Update URL hash
+    const h = which === 'production' ? '#production' : '#import';
+    if (location.hash !== h) history.replaceState(null, '', h);
+
+
+    // Reset switching flag after animation
+    setTimeout(() => {
+      isSwitching = false;
+    }, 400); // Match CSS transition duration
+  }
+
+
+  // Handle clicks
+  tabs.forEach((b) => b.addEventListener('click', () => activate(b.dataset.tab)));
+
+
+  // Handle initial hash
+  const hash = (location.hash || '').replace('#', '');
+  if (hash === 'import') activate('import');
+  else activate('production');
+})();
+
+
+
+
+</script>
+{% endblock %}
